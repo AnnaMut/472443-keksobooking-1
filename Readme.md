@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Анна Мут](https://up.htmlacademy.ru/javascript/12/user/472443).
-* Наставник: `Неизвестно`.
+* Наставник: [Борис Ванюшин](https://htmlacademy.ru/profile/id62080).
 
 ---
 
