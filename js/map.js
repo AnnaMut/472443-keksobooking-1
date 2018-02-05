@@ -1,6 +1,18 @@
 'use strict';
 
 var NOTICE_COUNT = 8;
+var MAP_POINTX_MIN = 300;
+var MAP_POINTX_MAX = 900;
+var MAP_POINTY_MIN = 150;
+var MAP_POINTY_MAX = 500;
+var PRICE_MIN = 1000;
+var PRICE_MAX = 1000000;
+var ROOM_MIN = 1;
+var ROOM_MAX = 5;
+var GUESTS_MIN = 1;
+var GUESTS_MAX = 20;/** ограничила в 20 гостей**/
+var PIN_WIDTH = 40;
+var PIN_HEIGHT = 70;
 
 var AvatarNumberList = [
 1,
@@ -25,9 +37,9 @@ var OfferTitleList = [
 ];
 
 var OfferTypeList = [
-flat,
-house,
-bungalo
+'flat',
+'house',
+'bungalo'
 ];
 
 var CheckInAndOutList = [
@@ -38,7 +50,8 @@ var CheckInAndOutList = [
 var OfferFeaturesList = [
 'wifi',
 'dishwasher',
-'parking', 'washer',
+'parking',
+'washer',
 'elevator',
 'conditioner'
 ];
@@ -63,39 +76,69 @@ var getRandomNumber = function (min, max) {
    return Math.floor(Math.random() * (max - min) + min);
  };
 
-  var NoticePoint = [
-  {
+
+  var NoticeList = [];
+for (var i = 0; i < NOTICE_COUNT; i++) {
+  var CoordinateX = getRandomNumber(MAP_POINTX_MIN, MAP_POINTX_MAX);
+  var CoordinateY = getRandomNumber(MAP_POINTY_MIN, MAP_POINTY_MAX);
+
+  NoticeList[i] = {
   'author': {
     'avatar': 'img/avatars/user0' + (' + getRandomPoint(AvatarNumberList) + ' + 1) + '.png',
   },
 
   'offer': {
     'title': getRandomPoint(OfferTitleList),
-    'address': getRandomNumber(300, 900) + ', ' + getRandomNumber(150, 500),
-    'price': getRandomNumber(1000, 1000000),
+    'address': getRandomNumber(MAP_POINTX_MIN, MAP_POINTX_MAX) + ', ' + getRandomNumber(MAP_POINTY_MIN, MAP_POINTY_MAX),
+    'price': getRandomNumber(PRICE_MIN, PRICE_MAX),
     'type':getRandomPointRepeat(OfferTypeList),
-    'rooms': getRandomNumber(1, 5),
-    'guests': getRandomNumber (1,20), /** ограничила в 20 гостей**/
+    'rooms': getRandomNumber(ROOM_MIN, ROOM_MAX),
+    'guests': getRandomNumber (GUESTS_MIN,GUESTS_MAX),
     'checkin': getRandomPointRepeat (CheckInAndOutList),
     'checkout': getRandomPointRepeat (CheckInAndOutList),
-    'features': OfferFeaturesList.length = getRandomNumber(0,6),
+    'features': OfferFeaturesList.length = getRandomNumber(0,OfferFeaturesList.length),
     'description': '',
     'photos': OfferPhotos.sort(),
   },
 
-  "location": {
-    'x': getRandomNumber(300, 900),
-    'y': getRandomNumber(150, 500),
+  'location': {
+    'x': CoordinateX,
+    'y': CoordinateY,
   }
-}
-];
-
-var NoticeList = new Array(NOTICE_COUNT);
-for (var i = 0; i < NOTICE_COUNT; i++) {
-  NoticeList[i] = NoticePoint;
+};
 }
 
-document.write(NoticeList);
 
 var mapSection = document.querySelector('.map');
 mapSection.classList.remove('map--faded');
+var pinsBox = document.querySelector('.map__pins');
+var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+
+  for (var i = 0; i < NOTICE_COUNT; i++) {
+    var template = pinTemplate.cloneNode(true);
+    var pinFragment = document.createDocumentFragment();
+    template.setAttribute('style', 'left:' + (NoticeList[i].location.x - PIN_WIDTH) + 'px; top: ' + (NoticeList[i].location.y - PIN_HEIGHT) + 'px');
+    template.querySelector('img').setAttribute('src', NoticeList[i].author.avatar);
+
+  pinFragment.appendChild(template);
+  pinsBox.appendChild(pinFragment);
+ }
+
+var pinArticle = document.querySelector('template').content.querySelector('.map__card');
+var beforeArticle = document.querySelector('.map__filters-container');
+
+ var getArticle = function () {
+  var articleBox = pinArticle.cloneNode(true);
+
+    articleBox.querySelector('h3').textContent = NoticeList[i].offer.title;
+    articleBox.querySelector('small').textContent = NoticeList[i].offer.address;
+    articleBox.querySelector('.popup__price').textContent = NoticeList[i].offer.price + ' ' + '&#x20bd;/ночь';
+    articleBox.querySelector('h4').textContent = NoticeList[i].offer.type;
+    articleBox.querySelector('h4 + p').textContent = NoticeList[i].offer.rooms + ' комнаты для ' + NoticeList[i].offer.guests + ' гостей';
+    articleBox.querySelector('h4 + p + p').textContent = 'Заезд после ' + NoticeList[i].offer.checkin + ', выезд до ' + NoticeList[i].offer.checkout;
+    articleBox.querySelector('.popup__features + p').textContent = NoticeList[i].offer.description;
+    articleBox.querySelector('.popup__avatar').src = NoticeList[i].author.avatar;
+
+   return articleBox;
+ };
+
