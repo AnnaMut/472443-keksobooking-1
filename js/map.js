@@ -1,10 +1,13 @@
 'use strict';
 
 var NOTICE_COUNT = 8;
-var MAP_POINTX_MIN = 300;
-var MAP_POINTX_MAX = 900;
-var MAP_POINTY_MIN = 150;
-var MAP_POINTY_MAX = 500;
+var MAP = {
+  'left': 300,
+  'top': 150,
+  'right': 900,
+  'bottom': 500
+};
+
 var PRICE_MIN = 1000;
 var PRICE_MAX = 1000000;
 var ROOM_MIN = 1;
@@ -13,17 +16,6 @@ var GUESTS_MIN = 1;
 var GUESTS_MAX = 20;/** ограничила в 20 гостей**/
 var PIN_WIDTH = 40;
 var PIN_HEIGHT = 70;
-
-var AvatarNumberList = [
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8
-];
 
 var OfferTitleList = [
   'Большая уютная квартира',
@@ -62,63 +54,46 @@ var OfferPhotos = [
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
-// не знаю будет работать или нет, но нам нужно вытащить случайный элемент и чтобы он не повторялся
-var getRandomPoint = function (arr) {
-  var randomPoint = Math.floor(Math.random() * arr.length);
-  return arr.splice(randomPoint, 1);
+var getCompare = function () {
+  return Math.random() - 0.5;
 };
 
-// еще функция где случайное значение но повтор возможен
+var getMixedNewLengthArray = function (arr) {
+  var copyArr = arr.sort(getCompare);
+  return copyArr.slice(0, 1 + Math.floor(Math.random() * arr.length));
+};
+
 var getRandomPointRepeat = function (arr) {
   var randomIndex = Math.floor(Math.random() * arr.length);
   return arr[randomIndex];
 };
 
-var getRandomNumber = function (min, max) {
+var getRandomValue = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
-};
-
-var getMixedArray = function (arr) {
-  for (var i = arr.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
-  }
-  return arr;
-};
-
-var getNewArrayLength = function (arr) {
-  var newArr = [];
-  var newLength = Math.floor(Math.random() * (arr.length));
-  for (var i = 0; i < newLength; i++) {
-    newArr[i] = arr[i];
-  }
-  return newArr;
 };
 
 var NoticeList = [];
 for (var i = 0; i < NOTICE_COUNT; i++) {
-  var CoordinateX = getRandomNumber(MAP_POINTX_MIN, MAP_POINTX_MAX);
-  var CoordinateY = getRandomNumber(MAP_POINTY_MIN, MAP_POINTY_MAX);
+  var CoordinateX = getRandomValue(MAP.left, MAP.right);
+  var CoordinateY = getRandomValue(MAP.top, MAP.bottom);
 
   NoticeList[i] = {
     'author': {
-      'avatar': 'img/avatars/user0' + getRandomPoint(AvatarNumberList) + '.png',
+      'avatar': 'img/avatars/user0' + (i + 1) + '.png',
     },
 
     'offer': {
-      'title': getRandomPoint(OfferTitleList),
+      'title': OfferTitleList.sort(getCompare)[i],
       'address': CoordinateX + ',' + CoordinateY,
-      'price': getRandomNumber(PRICE_MIN, PRICE_MAX),
+      'price': getRandomValue(PRICE_MIN, PRICE_MAX),
       'type': getRandomPointRepeat(OfferTypeList),
-      'rooms': getRandomNumber(ROOM_MIN, ROOM_MAX),
-      'guests': getRandomNumber(GUESTS_MIN, GUESTS_MAX),
+      'rooms': getRandomValue(ROOM_MIN, ROOM_MAX),
+      'guests': getRandomValue(GUESTS_MIN, GUESTS_MAX),
       'checkin': getRandomPointRepeat(CheckInAndOutList),
       'checkout': getRandomPointRepeat(CheckInAndOutList),
-      'features': getNewArrayLength(OfferFeaturesList),
+      'features': getMixedNewLengthArray(OfferFeaturesList),
       'description': '',
-      'photos': getMixedArray(OfferPhotos),
+      'photos': OfferPhotos.sort(getCompare),
     },
 
     'location': {
@@ -133,38 +108,55 @@ var mapSection = document.querySelector('.map');
 mapSection.classList.remove('map--faded');
 var pinsBox = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+var pinFragment = document.createDocumentFragment();
 
 for (i = 0; i < NOTICE_COUNT; i++) {
   var template = pinTemplate.cloneNode(true);
-  var pinFragment = document.createDocumentFragment();
-  template.setAttribute('style', 'left:' + (NoticeList[i].location.x - PIN_WIDTH) + 'px; top: ' + (NoticeList[i].location.y - PIN_HEIGHT) + 'px');
-  template.querySelector('img').setAttribute('src', NoticeList[i].author.avatar);
-
+  template.style = 'left:' + (NoticeList[i].location.x - PIN_WIDTH) + 'px; top: ' + (NoticeList[i].location.y - PIN_HEIGHT) + 'px';
+  template.querySelector('img').src = NoticeList[i].author.avatar; //* переделала поединообразнее *//
   pinFragment.appendChild(template);
-  pinsBox.appendChild(pinFragment);
 }
 
+pinsBox.appendChild(pinFragment);
 var pinArticle = document.querySelector('template').content.querySelector('.map__card');
 var afterArticle = document.querySelector('.map__filters-container');
+var articleArray = NoticeList[0];//
 
-var articleSection = document.createElement('section');
-articleSection.className = 'map__card box';
-mapSection.insertBefore(articleSection, afterArticle);
+var newArticle = pinArticle.cloneNode(true);
+var articleFragment = document.createDocumentFragment();
+articleFragment.appendChild(newArticle);
+mapSection.insertBefore(newArticle, afterArticle);
 
 for (i = 0; i < NOTICE_COUNT; i++) {
-  var newArticle = pinArticle.cloneNode(true);
-
-  var articleFragment = document.createDocumentFragment();
-  articleFragment.appendChild(newArticle);
-  articleSection.appendChild(articleFragment);
-
+  newArticle.querySelector('.popup__avatar').src = articleArray.author.avatar;
   newArticle.querySelector('h3').textContent = NoticeList[i].offer.title;
   newArticle.querySelector('small').textContent = NoticeList[i].offer.address;
-  newArticle.querySelector('.popup__price').textContent = NoticeList[i].offer.price + 'Р/ночь';
+  newArticle.querySelector('.popup__price').textContent = NoticeList[i].offer.price + ' ₽/ночь';
   newArticle.querySelector('h4').textContent = NoticeList[i].offer.type;
   newArticle.querySelector('h4 + p').textContent = NoticeList[i].offer.rooms + ' комнаты для ' + NoticeList[i].offer.guests + ' гостей';
   newArticle.querySelector('h4 + p + p').textContent = 'Заезд после ' + NoticeList[i].offer.checkin + ', выезд до ' + NoticeList[i].offer.checkout;
-
   newArticle.querySelector('.popup__features + p').textContent = NoticeList[i].offer.description;
-  newArticle.querySelector('.popup__avatar').src = NoticeList[i].author.avatar;
 }
+
+var ArticleFeatureBox = newArticle.querySelector('.popup__features');
+var defoltFeatures = ArticleFeatureBox.querySelectorAll('li');
+for (i = 0; i < defoltFeatures.length; i++) {
+  ArticleFeatureBox.removeChild(newArticle.querySelector('li'));
+}
+
+for (var a = 0; a < articleArray.offer.features.length; a++) {
+  var ArticleFeature = document.createElement('li');
+  ArticleFeatureBox.appendChild(ArticleFeature);
+  ArticleFeature.className = 'feature feature--' + articleArray.offer.features[a];
+}
+
+var photoBox = newArticle.querySelector('.popup__pictures');
+for (var b = 0; b < articleArray.offer.photos.length; b++) {
+  var photoItemli = photoBox.querySelector('li').cloneNode(true);
+  photoBox.appendChild(photoItemli);
+  photoItemli.querySelector('img').src = articleArray.offer.photos[b];
+  photoItemli.querySelector('img').style = 'width:' + '50px';
+  photoItemli.querySelector('img').style = 'height:' + '50px';
+}
+
+photoBox.removeChild(newArticle.querySelector('.popup__pictures li'));
