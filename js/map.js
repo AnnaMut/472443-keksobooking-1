@@ -17,7 +17,7 @@ var GUESTS_MAX = 20;/** ограничила в 20 гостей**/
 var PIN_WIDTH = 40;
 var PIN_HEIGHT = 70;
 
-var offerTitleList = [
+var titles = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
   'Огромный прекрасный дворец',
@@ -28,23 +28,23 @@ var offerTitleList = [
   'Неуютное бунгало по колено в воде'
 ];
 
-var offerTypeList = [
+var types = [
   'flat',
   'house',
   'bungalo'
 ];
 
-var checkInTimeList = [
+var checkInTimes = [
   '12:00',
   '13:00',
   '14:00'];
 
-var checkOutTimeList = [
+var checkOutTimes = [
   '12:00',
   '13:00',
   '14:00'];
 
-var offerFeaturesList = [
+var features = [
   'wifi',
   'dishwasher',
   'parking',
@@ -53,7 +53,7 @@ var offerFeaturesList = [
   'conditioner'
 ];
 
-var offerPhotos = [
+var photos = [
   'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
@@ -77,28 +77,28 @@ var getRandomFromInterval = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
-var offerList = [];
+var offers = [];
 for (var i = 0; i < OFFER_COUNT; i++) {
   var CoordinateX = getRandomFromInterval(MAP.left, MAP.right);
   var CoordinateY = getRandomFromInterval(MAP.top, MAP.bottom);
 
-  offerList[i] = {
+  offers[i] = {
     'author': {
       'avatar': 'img/avatars/user0' + (i + 1) + '.png',
     },
 
     'offer': {
-      'title': offerTitleList.sort(randomSort)[i],
+      'title': titles.sort(randomSort)[i],
       'address': CoordinateX + ',' + CoordinateY,
       'price': getRandomFromInterval(PRICE_MIN, PRICE_MAX),
-      'type': getRandomElement(offerTypeList),
+      'type': getRandomElement(types),
       'rooms': getRandomFromInterval(ROOM_MIN, ROOM_MAX),
       'guests': getRandomFromInterval(GUESTS_MIN, GUESTS_MAX),
-      'checkin': getRandomElement(checkInTimeList),
-      'checkout': getRandomElement(checkOutTimeList),
-      'features': getRandomSubarray(offerFeaturesList),
+      'checkin': getRandomElement(checkInTimes),
+      'checkout': getRandomElement(checkOutTimes),
+      'features': getRandomSubarray(features),
       'description': '',
-      'photos': offerPhotos.sort(randomSort),
+      'photos': photos.sort(randomSort),
     },
 
     'location': {
@@ -117,16 +117,16 @@ var pinFragment = document.createDocumentFragment();
 
 for (i = 0; i < OFFER_COUNT; i++) {
   var template = pinTemplate.cloneNode(true);
-  template.style.left = offerList[i].location.x - PIN_WIDTH + 'px';
-  template.style.top = offerList[i].location.y - PIN_HEIGHT + 'px';
-  template.querySelector('img').src = offerList[i].author.avatar;
+  template.style.left = offers[i].location.x - PIN_WIDTH + 'px';
+  template.style.top = offers[i].location.y - PIN_HEIGHT + 'px';
+  template.querySelector('img').src = offers[i].author.avatar;
   pinFragment.appendChild(template);
 }
 
 pinsBox.appendChild(pinFragment);
 var pinArticle = document.querySelector('template').content.querySelector('.map__card');
 var afterArticle = document.querySelector('.map__filters-container');
-var articleArray = offerList[0];
+var articleArray = offers[0];
 
 var newArticle = pinArticle.cloneNode(true);
 var articleFragment = document.createDocumentFragment();
@@ -134,14 +134,14 @@ articleFragment.appendChild(newArticle);
 mapSection.insertBefore(newArticle, afterArticle);
 
 for (i = 0; i < OFFER_COUNT; i++) {
-  newArticle.querySelector('.popup__avatar').src = offerList[i].author.avatar;
-  newArticle.querySelector('h3').textContent = offerList[i].offer.title;
-  newArticle.querySelector('small').textContent = offerList[i].offer.address;
-  newArticle.querySelector('.popup__price').textContent = offerList[i].offer.price + ' ₽/ночь';
-  newArticle.querySelector('h4').textContent = offerList[i].offer.type;
-  newArticle.querySelector('h4 + p').textContent = offerList[i].offer.rooms + ' комнаты для ' + offerList[i].offer.guests + ' гостей';
-  newArticle.querySelector('h4 + p + p').textContent = 'Заезд после ' + offerList[i].offer.checkin + ', выезд до ' + offerList[i].offer.checkout;
-  newArticle.querySelector('.popup__features + p').textContent = offerList[i].offer.description;
+  newArticle.querySelector('.popup__avatar').src = offers[i].author.avatar;
+  newArticle.querySelector('h3').textContent = offers[i].offer.title;
+  newArticle.querySelector('small').textContent = offers[i].offer.address;
+  newArticle.querySelector('.popup__price').textContent = offers[i].offer.price + ' ₽/ночь';
+  newArticle.querySelector('h4').textContent = offers[i].offer.type;
+  newArticle.querySelector('h4 + p').textContent = offers[i].offer.rooms + ' комнаты для ' + offers[i].offer.guests + ' гостей';
+  newArticle.querySelector('h4 + p + p').textContent = 'Заезд после ' + offers[i].offer.checkin + ', выезд до ' + offers[i].offer.checkout;
+  newArticle.querySelector('.popup__features + p').textContent = offers[i].offer.description;
 }
 
 var articleFeatureBox = newArticle.querySelector('.popup__features');
@@ -150,17 +150,17 @@ for (i = 0; i < defoltFeatures.length; i++) {
   articleFeatureBox.removeChild(newArticle.querySelector('li'));
 }
 
-for (var a = 0; a < articleArray.offer.features.length; a++) {
+for (var k = 0; k < articleArray.offer.features.length; k++) {
   var articleFeature = document.createElement('li');
   articleFeatureBox.appendChild(articleFeature);
-  articleFeature.className = 'feature feature--' + articleArray.offer.features[a];
+  articleFeature.className = 'feature feature--' + articleArray.offer.features[k];
 }
 
 var photoBox = newArticle.querySelector('.popup__pictures');
-for (var b = 0; b < articleArray.offer.photos.length; b++) {
+for (var l = 0; l < articleArray.offer.photos.length; l++) {
   var photoItemli = photoBox.querySelector('li').cloneNode(true);
   photoBox.appendChild(photoItemli);
-  photoItemli.querySelector('img').src = articleArray.offer.photos[b];
+  photoItemli.querySelector('img').src = articleArray.offer.photos[l];
   photoItemli.querySelector('img').style = 'width:' + '50px';
   photoItemli.querySelector('img').style = 'height:' + '50px';
 }
