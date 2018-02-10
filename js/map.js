@@ -17,7 +17,7 @@ var GUESTS_MAX = 20;/** ограничила в 20 гостей**/
 var PIN_WIDTH = 40;
 var PIN_HEIGHT = 70;
 
-var titles = [
+var offerTitles = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
   'Огромный прекрасный дворец',
@@ -28,23 +28,23 @@ var titles = [
   'Неуютное бунгало по колено в воде'
 ];
 
-var types = [
+var offerTypes = [
   'flat',
   'house',
   'bungalo'
 ];
 
-var checkInTimes = [
+var offerCheckInTimes = [
   '12:00',
   '13:00',
   '14:00'];
 
-var checkOutTimes = [
+var offerCheckOutTimes = [
   '12:00',
   '13:00',
   '14:00'];
 
-var features = [
+var offerFeatures = [
   'wifi',
   'dishwasher',
   'parking',
@@ -53,7 +53,7 @@ var features = [
   'conditioner'
 ];
 
-var photos = [
+var offerPhotos = [
   'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
@@ -88,17 +88,17 @@ for (var i = 0; i < OFFER_COUNT; i++) {
     },
 
     'offer': {
-      'title': titles.sort(randomSort)[i],
+      'title': offerTitles.sort(randomSort)[i],
       'address': CoordinateX + ',' + CoordinateY,
       'price': getRandomFromInterval(PRICE_MIN, PRICE_MAX),
-      'type': getRandomElement(types),
+      'type': getRandomElement(offerTypes),
       'rooms': getRandomFromInterval(ROOM_MIN, ROOM_MAX),
       'guests': getRandomFromInterval(GUESTS_MIN, GUESTS_MAX),
-      'checkin': getRandomElement(checkInTimes),
-      'checkout': getRandomElement(checkOutTimes),
-      'features': getRandomSubarray(features),
+      'checkin': getRandomElement(offerCheckInTimes),
+      'checkout': getRandomElement(offerCheckOutTimes),
+      'features': getRandomSubarray(offerFeatures),
       'description': '',
-      'photos': photos.sort(randomSort),
+      'photos': offerPhotos.sort(randomSort),
     },
 
     'location': {
