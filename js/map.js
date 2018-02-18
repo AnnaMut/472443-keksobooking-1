@@ -243,10 +243,10 @@ var pinsOnMap = document.querySelector('.map__pins');
 
 var getPinByAttribute = function (evt) {
   closeArticle();
-  var indexPin = evt.target.closest('.map__pin');
+  var indexPin = evt.target.closest('.map__pin:not(.map__pin--main)');
   if (indexPin && indexPin.tagName === 'BUTTON') {
     for (var i = 0; i < OFFER_COUNT; i++) {
-      var id = evt.target.closest('.map__pin').id;
+      var id = evt.target.closest('.map__pin:not(.map__pin--main)').id;
       var index = parseInt(id.substr(pinPrefix.length), 10);
       getArticle(index);
       putPinOnMap(index);
