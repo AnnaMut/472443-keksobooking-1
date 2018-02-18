@@ -66,6 +66,10 @@ var KeyCodes = {
   ENTER: 13
 };
 
+var pinPrefix = 'pin-';
+
+var activePinClass = 'map__pin--main';
+
 var randomSort = function () {
   return Math.random() - 0.5;
 };
@@ -97,12 +101,12 @@ var getFeatures = function (arr) {
   return featuresBox;
 };
 
-var getPhotos = function (arrPhoto) {
+var getPhotos = function (arr) {
   var photoTemlate = document.createElement('img');
   var photoBox = document.createDocumentFragment();
-  for (var i = 0; i < arrPhoto.length; i++) {
+  for (var i = 0; i < arr.length; i++) {
     var photoItemli = photoTemlate.cloneNode(true);
-    photoItemli.src = arrPhoto[i];
+    photoItemli.src = arr[i];
     photoItemli.style = 'width:' + '50px';
     photoItemli.style = 'height:' + '50px';
     photoBox.appendChild(photoItemli);
@@ -154,7 +158,7 @@ var getPins = function () {
     template.style.left = offers[i].location.x - PIN_WIDTH + 'px';
     template.style.top = offers[i].location.y - PIN_HEIGHT + 'px';
     template.querySelector('img').src = offers[i].author.avatar;
-    template.setAttribute('number', i);
+    template.id = pinPrefix + i;
     pinFragment.appendChild(template);
   }
   PinsBox.appendChild(pinFragment);
@@ -238,13 +242,20 @@ putPinOnMap(0);
 var pinsOnMap = document.querySelector('.map__pins');
 
 var getPinByAttribute = function (evt) {
-  if (evt.path[1].hasAttribute('number')) {
-    putPinOnMap(evt.path[1].getAttribute('number'));
+  closeArticle();
+  var indexPin = evt.target.closest('.map__pin');
+  if (indexPin && indexPin.tagName === 'BUTTON') {
+    for (var i = 0; i < OFFER_COUNT; i++) {
+      var id = evt.target.closest('.map__pin').id;
+      var index = parseInt(id.substr(pinPrefix.length), 10);
+      getArticle(index);
+      putPinOnMap(index);
+      mapSection.querySelector('.popup__close').addEventListener('click', closeArticleByClick);
+    }
   }
 };
 
 pinsOnMap.addEventListener('click', getPinByAttribute);
-
 
 var closeArticle = function () {
   var article = document.querySelector('.map__card');
@@ -272,7 +283,7 @@ mapSection.addEventListener('keydown', closeArticleByEsc);
 var closePins = function () {
   var mapPins = document.querySelectorAll('.map__pin');
   for (var i = 0; i < mapPins.length; i++) {
-    if (!mapPins[i].classList.contains('map__pin--main')) {
+    if (!mapPins[i].classList.contains(activePinClass)) {
       mapPins[i].classList.add('hidden');
     }
   }
@@ -281,11 +292,10 @@ var closePins = function () {
 var openPins = function () {
   var mapPins = document.querySelectorAll('.map__pin');
   for (var i = 0; i < mapPins.length; i++) {
-    if (!mapPins[i].classList.contains('map__pin--main')) {
+    if (!mapPins[i].classList.contains(activePinClass)) {
       mapPins[i].classList.remove('hidden');
     }
   }
 };
 
 closePins();
-
