@@ -68,7 +68,7 @@ var KeyCodes = {
 
 var pinPrefix = 'pin-';
 
-var activePinClass = 'map__pin--main';
+var mainPinClass = 'map__pin--main';
 
 var randomSort = function () {
   return Math.random() - 0.5;
@@ -227,7 +227,7 @@ var getActiveFieldsets = function () {
 
 getUnactiveFieldsets();
 
-var putPinOnMap = function (i) {
+var putCardOnMap = function (i) {
   var mapCard = document.querySelector('.map__card');
   if (mapSection.contains(mapCard)) {
     mapCard.remove();
@@ -237,7 +237,7 @@ var putPinOnMap = function (i) {
   mapSection.insertBefore(cardFragment, document.querySelector('.map__filters-container'));
 };
 
-putPinOnMap(0);
+putCardOnMap(0);
 
 var pinsOnMap = document.querySelector('.map__pins');
 
@@ -249,7 +249,7 @@ var getPinByAttribute = function (evt) {
       var id = evt.target.closest('.map__pin:not(.map__pin--main)').id;
       var index = parseInt(id.substr(pinPrefix.length), 10);
       getArticle(index);
-      putPinOnMap(index);
+      putCardOnMap(index);
       mapSection.querySelector('.popup__close').addEventListener('click', closeArticleByClick);
     }
   }
@@ -283,7 +283,7 @@ mapSection.addEventListener('keydown', closeArticleByEsc);
 var closePins = function () {
   var mapPins = document.querySelectorAll('.map__pin');
   for (var i = 0; i < mapPins.length; i++) {
-    if (!mapPins[i].classList.contains(activePinClass)) {
+    if (!mapPins[i].classList.contains(mainPinClass)) {
       mapPins[i].classList.add('hidden');
     }
   }
@@ -292,7 +292,7 @@ var closePins = function () {
 var openPins = function () {
   var mapPins = document.querySelectorAll('.map__pin');
   for (var i = 0; i < mapPins.length; i++) {
-    if (!mapPins[i].classList.contains(activePinClass)) {
+    if (!mapPins[i].classList.contains(mainPinClass)) {
       mapPins[i].classList.remove('hidden');
     }
   }
