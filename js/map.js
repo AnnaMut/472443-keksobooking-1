@@ -336,21 +336,22 @@ var getFormTitleValidation = function () {
 formTitle.addEventListener('invalid', getFormTitleValidation);
 
 
-var getSyncTime = form.onchange = function (element) {
-  this.timein.value = element.target.value;
-  this.timeout.value = element.target.value;
+var getSyncTime = function (element) {
+  form.timein.value = element.target.value;
+  form.timeout.value = element.target.value;
 };
-
+form.onchange = getSyncTime;
 
 var formType = form.querySelector('#type');
 var formPrice = form.querySelector('#price');
 var Prices = [1000, 0, 5000, 10000];
 
-var getSyncPrice = formType.onchange = function () {
+var getSyncPrice = function () {
   var Index = formType.selectedIndex;
   formPrice.setAttribute('min', Prices[Index]);
   formPrice.setAttribute('placeholder', Prices[Index]);
 };
+formType.onchange = getSyncPrice;
 
 var guests = {
   '1': ['1'],
@@ -362,8 +363,7 @@ var guests = {
 var formRoomNumber = form.querySelector('#room_number');
 var formRoomCapacity = form.querySelector('#capacity');
 
-
-var getCapacity = formRoomNumber.onchange = function () {
+var getCapacity = function () {
   for (var key in guests) {
     if (formRoomNumber.value === key) {
       formRoomCapacity.value = guests[key][0];
@@ -377,13 +377,15 @@ var getCapacity = formRoomNumber.onchange = function () {
   }
 };
 
-var getSyncRoomsCapacity = formRoomCapacity.onchange = function () {
+var getSyncRoomsCapacity = function () {
   for (var key in guests) {
     if (guests[key].indexOf(formRoomCapacity.value) > -1) {
       formRoomNumber.value = key;
     }
   }
 };
+formRoomNumber.onchange = getCapacity;
+formRoomCapacity.onchange = getSyncRoomsCapacity;
 
 var formPriceValidationMessages = [
   'Цена слишком мала',
