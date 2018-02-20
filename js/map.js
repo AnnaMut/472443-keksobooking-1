@@ -36,6 +36,12 @@ var offerTypes = [
   'bungalo'
 ];
 
+var typesDictionary = {
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalo: 'Бунгало'
+};
+
 var offerCheckInTimes = [
   '12:00',
   '13:00',
@@ -69,6 +75,8 @@ var KeyCodes = {
 var pinPrefix = 'pin-';
 
 var mainPinClass = 'map__pin--main';
+
+var pinsClass = '.map__pin';
 
 var randomSort = function () {
   return Math.random() - 0.5;
@@ -151,7 +159,7 @@ getOffers(OFFER_COUNT);
 
 var getPins = function () {
   var PinsBox = document.querySelector('.map__pins');
-  var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+  var pinTemplate = document.querySelector('template').content.querySelector(pinsClass);
   var pinFragment = document.createDocumentFragment();
   for (var i = 0; i < OFFER_COUNT; i++) {
     var template = pinTemplate.cloneNode(true);
@@ -174,7 +182,7 @@ var getArticle = function (i) {
   newArticle.querySelector('h3').textContent = offers[i].offer.title;
   newArticle.querySelector('small').textContent = offers[i].offer.address;
   newArticle.querySelector('.popup__price').textContent = offers[i].offer.price + ' ₽/ночь';
-  newArticle.querySelector('h4').textContent = offers[i].offer.type;
+  newArticle.querySelector('h4').textContent = typesDictionary[offers[i].offer.type];
   newArticle.querySelector('h4 + p').textContent = offers[i].offer.rooms + ' комнаты для ' + offers[i].offer.guests + ' гостей';
   newArticle.querySelector('h4 + p + p').textContent = 'Заезд после ' + offers[i].offer.checkin + ', выезд до ' + offers[i].offer.checkout;
   newArticle.querySelector('.popup__features').textContent = '';
@@ -187,6 +195,7 @@ var getArticle = function (i) {
 
 var mainPin = document.querySelector('.map__pin--main');
 var mapSection = document.querySelector('.map');
+var form = document.querySelector('.notice__form');
 
 var closePageOverlay = function () {
   mapSection.classList.remove('map--faded');
@@ -217,7 +226,6 @@ var getUnactiveFieldsets = function () {
 };
 
 var getActiveFieldsets = function () {
-  var form = document.querySelector('.notice__form');
   var formFieldsets = form.querySelectorAll('.notice__form fieldset');
   form.classList.remove('notice__form--disabled');
   for (var i = 0; i < formFieldsets.length; i++) {
@@ -281,7 +289,7 @@ mapSection.addEventListener('click', closeArticleByClick);
 mapSection.addEventListener('keydown', closeArticleByEsc);
 
 var closePins = function () {
-  var mapPins = document.querySelectorAll('.map__pin');
+  var mapPins = document.querySelectorAll(pinsClass);
   for (var i = 0; i < mapPins.length; i++) {
     if (!mapPins[i].classList.contains(mainPinClass)) {
       mapPins[i].classList.add('hidden');
@@ -290,7 +298,7 @@ var closePins = function () {
 };
 
 var openPins = function () {
-  var mapPins = document.querySelectorAll('.map__pin');
+  var mapPins = document.querySelectorAll(pinsClass);
   for (var i = 0; i < mapPins.length; i++) {
     if (!mapPins[i].classList.contains(mainPinClass)) {
       mapPins[i].classList.remove('hidden');
@@ -299,3 +307,127 @@ var openPins = function () {
 };
 
 closePins();
+
+var formTitle = form.querySelector('#title');
+var formTitleValidationMessages = [
+  'Заголовок объявления должен состоять минимум из 30 символов',
+  'Заголовок объявления не должен превышать 100 символов',
+  'Пожалуйста, введите заголовок Вашего объявления'
+];
+
+var invalidBorderStyle = 'border: 3px solid #ff0000';
+var normalBorderStyle = 'border: 1px solid #d9d9d3';
+
+var getFormTitleValidation = function () {
+  if (formTitle.validity.tooShort) {
+    formTitle.setCustomValidity(formTitleValidationMessages[0]);
+    formTitle.style = invalidBorderStyle;
+  } else if (formTitle.validity.tooLong) {
+    formTitle.setCustomValidity(formTitleValidationMessages[1]);
+    formTitle.style = invalidBorderStyle;
+  } else if (formTitle.validity.valueMissing) {
+    formTitle.setCustomValidity(formTitleValidationMessages[2]);
+    formTitle.style = invalidBorderStyle;
+  } else {
+    formTitle.setCustomValidity('');
+    formTitle.style = normalBorderStyle;
+  }
+};
+formTitle.addEventListener('invalid', getFormTitleValidation);
+
+
+var getSyncTime = form.onchange = function (element) {
+  this.timein.value = element.target.value;
+  this.timeout.value = element.target.value;
+};
+
+
+var formType = form.querySelector('#type');
+var formPrice = form.querySelector('#price');
+var Prices = [1000, 0, 5000, 10000];
+
+var getSyncPrice = formType.onchange = function () {
+  var Index = formType.selectedIndex;
+  formPrice.setAttribute('min', Prices[Index]);
+  formPrice.setAttribute('placeholder', Prices[Index]);
+};
+
+var guests = {
+  '1': ['1'],
+  '2': ['1', '2'],
+  '3': ['1', '2', '3'],
+  '100': ['0']
+};
+
+var formRoomNumber = form.querySelector('#room_number');
+var formRoomCapacity = form.querySelector('#capacity');
+
+
+var getCapacity = formRoomNumber.onchange = function () {
+  for (var key in guests) {
+    if (formRoomNumber.value === key) {
+      formRoomCapacity.value = guests[key][0];
+      for (var i = 0; i < formRoomCapacity.options.length; i++) {
+        formRoomCapacity.options[i].removeAttribute('disabled');
+        if (guests[key].indexOf(formRoomCapacity.options[i].value) === -1) {
+          formRoomCapacity.options[i].setAttribute('disabled', '');
+        }
+      }
+    }
+  }
+};
+
+var getSyncRoomsCapacity = formRoomCapacity.onchange = function () {
+  for (var key in guests) {
+    if (guests[key].indexOf(formRoomCapacity.value) > -1) {
+      formRoomNumber.value = key;
+    }
+  }
+};
+
+var formPriceValidationMessages = [
+  'Цена слишком мала',
+  'Цена для данного типа не должна превышать 1000000',
+  'Пожалуйста, введите цену'
+];
+
+var getFormPriceValidation = function () {
+  if (formPrice.validity.rangeUnderflow) {
+    formPrice.setCustomValidity(formPriceValidationMessages[0]);
+    formPrice.style = invalidBorderStyle;
+  } else if (formPrice.validity.rangeOverflow) {
+    formPrice.setCustomValidity(formPriceValidationMessages[1]);
+    formPrice.style = invalidBorderStyle;
+  } else if (formPrice.validity.valueMissing) {
+    formPrice.setCustomValidity(formPriceValidationMessages[2]);
+    formPrice.style = invalidBorderStyle;
+  } else {
+    formPrice.setCustomValidity('');
+    formTitle.style = normalBorderStyle;
+  }
+};
+formPrice.addEventListener('invalid', getFormPriceValidation);
+
+var formSubmitButton = form.querySelector('.form__submit');
+
+var getValidationBySubmit = function () {
+  formTitle.addEventListener('invalid', getFormTitleValidation);
+  formPrice.addEventListener('invalid', getFormPriceValidation);
+};
+
+formSubmitButton.addEventListener('click', getValidationBySubmit);
+
+var formResetButton = form.querySelector('.form__reset');
+
+var getResetPage = function () {
+  form.reset();
+  getUnactiveFieldsets();
+  closeArticle();
+  closePins();
+  mapSection.classList.add('map--faded');
+  form.classList.add('notice__form--disabled');
+};
+
+formResetButton.addEventListener('click', getResetPage);
+
+
