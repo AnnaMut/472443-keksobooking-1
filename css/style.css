@@ -855,7 +855,7 @@ textarea:focus
     background-position: -10px -10px;
 }
 
- .invalidcolor
+ .form__element .invalidcolor
 {
     border: 3px solid #ff0000;
 }

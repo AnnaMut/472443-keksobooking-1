@@ -315,8 +315,6 @@ var formTitleValidationMessages = {
   valueMissing: 'Пожалуйста, введите заголовок Вашего объявления'
 };
 
-// var invalidBorderStyle = 'border: 3px solid #ff0000';
-// var normalBorderStyle = 'border: 1px solid #d9d9d3';
 
 var getFormTitleValidation = function () {
   if (formTitle.validity.tooShort) {
@@ -330,7 +328,6 @@ var getFormTitleValidation = function () {
     formTitle.classList.add('invalidcolor');
   } else {
     formTitle.setCustomValidity('');
-    // formTitle.style = normalBorderStyle;
   }
 };
 formTitle.addEventListener('invalid', getFormTitleValidation);
@@ -398,7 +395,6 @@ var getFormPriceValidation = function () {
     formPrice.classList.add('invalidcolor');
   } else {
     formPrice.setCustomValidity('');
-    // formPrice.style = normalBorderStyle;
   }
 };
 formPrice.addEventListener('invalid', getFormPriceValidation);
@@ -421,8 +417,8 @@ formSubmitButton.addEventListener('click', getValidationBySubmit);
 var formResetButton = form.querySelector('.form__reset');
 
 var getResetPage = function () {
-  // formTitle.style = normalBorderStyle;
-  // formPrice.style = normalBorderStyle;
+  formTitle.classList.remove('invalidcolor');
+  formPrice.classList.remove('invalidcolor');
   getUnactiveFieldsets();
   closeArticle();
   closePins();
@@ -431,5 +427,4 @@ var getResetPage = function () {
 };
 
 formResetButton.addEventListener('click', getResetPage);
-
 
