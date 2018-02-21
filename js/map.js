@@ -341,8 +341,8 @@ var pricelimits = [1000, 0, 5000, 10000];
 
 var getSyncPrice = function () {
   var Index = formType.selectedIndex;
-  formPrice.setAttribute('min', Prices[Index]);
-  formPrice.setAttribute('placeholder', Prices[Index]);
+  formPrice.setAttribute('min', pricelimits[Index]);
+  formPrice.setAttribute('placeholder', pricelimits[Index]);
 };
 formType.onchange = getSyncPrice;
 
