@@ -337,7 +337,7 @@ formTitle.addEventListener('invalid', getFormTitleValidation);
 
 var formType = form.querySelector('#type');
 var formPrice = form.querySelector('#price');
-var Prices = [1000, 0, 5000, 10000];
+var pricelimits = [1000, 0, 5000, 10000];
 
 var getSyncPrice = function () {
   var Index = formType.selectedIndex;
