@@ -309,38 +309,31 @@ var openPins = function () {
 closePins();
 
 var formTitle = form.querySelector('#title');
-var formTitleValidationMessages = [
-  'Заголовок объявления должен состоять минимум из 30 символов',
-  'Заголовок объявления не должен превышать 100 символов',
-  'Пожалуйста, введите заголовок Вашего объявления'
-];
+var formTitleValidationMessages = {
+  tooShort: 'Заголовок объявления должен состоять минимум из 30 символов',
+  tooLong: 'Заголовок объявления не должен превышать 100 символов',
+  valueMissing: 'Пожалуйста, введите заголовок Вашего объявления'
+};
 
-var invalidBorderStyle = 'border: 3px solid #ff0000';
-var normalBorderStyle = 'border: 1px solid #d9d9d3';
+// var invalidBorderStyle = 'border: 3px solid #ff0000';
+// var normalBorderStyle = 'border: 1px solid #d9d9d3';
 
 var getFormTitleValidation = function () {
   if (formTitle.validity.tooShort) {
-    formTitle.setCustomValidity(formTitleValidationMessages[0]);
-    formTitle.style = invalidBorderStyle;
+    formTitle.setCustomValidity(formTitleValidationMessages.tooShort);
+    formTitle.classList.add('invalidcolor');
   } else if (formTitle.validity.tooLong) {
-    formTitle.setCustomValidity(formTitleValidationMessages[1]);
-    formTitle.style = invalidBorderStyle;
+    formTitle.setCustomValidity(formTitleValidationMessages.tooLong);
+    formTitle.classList.add('invalidcolor');
   } else if (formTitle.validity.valueMissing) {
-    formTitle.setCustomValidity(formTitleValidationMessages[2]);
-    formTitle.style = invalidBorderStyle;
+    formTitle.setCustomValidity(formTitleValidationMessages.valueMissing);
+    formTitle.classList.add('invalidcolor');
   } else {
     formTitle.setCustomValidity('');
-    formTitle.style = normalBorderStyle;
+    // formTitle.style = normalBorderStyle;
   }
 };
 formTitle.addEventListener('invalid', getFormTitleValidation);
-
-
-var getSyncTime = function (element) {
-  form.timein.value = element.target.value;
-  form.timeout.value = element.target.value;
-};
-form.onchange = getSyncTime;
 
 var formType = form.querySelector('#type');
 var formPrice = form.querySelector('#price');
@@ -387,28 +380,34 @@ var getSyncRoomsCapacity = function () {
 formRoomNumber.onchange = getCapacity;
 formRoomCapacity.onchange = getSyncRoomsCapacity;
 
-var formPriceValidationMessages = [
-  'Цена слишком мала',
-  'Цена для данного типа не должна превышать 1000000',
-  'Пожалуйста, введите цену'
-];
+var formPriceValidationMesssages = {
+  rangeUnderflow: 'Цена слишком мала',
+  rangeOverflow: 'Цена для данного типа не должна превышать 1000000',
+  valueMissing: 'Пожалуйста, введите цену'
+};
 
 var getFormPriceValidation = function () {
   if (formPrice.validity.rangeUnderflow) {
-    formPrice.setCustomValidity(formPriceValidationMessages[0]);
-    formPrice.style = invalidBorderStyle;
+    formPrice.setCustomValidity(formPriceValidationMesssages.rangeUnderflow);
+    formPrice.classList.add('invalidcolor');
   } else if (formPrice.validity.rangeOverflow) {
-    formPrice.setCustomValidity(formPriceValidationMessages[1]);
-    formPrice.style = invalidBorderStyle;
+    formPrice.setCustomValidity(formPriceValidationMesssages.rangeOverflow);
+    formPrice.classList.add('invalidcolor');
   } else if (formPrice.validity.valueMissing) {
-    formPrice.setCustomValidity(formPriceValidationMessages[2]);
-    formPrice.style = invalidBorderStyle;
+    formPrice.setCustomValidity(formPriceValidationMesssages.valueMissing);
+    formPrice.classList.add('invalidcolor');
   } else {
     formPrice.setCustomValidity('');
-    formPrice.style = normalBorderStyle;
+    // formPrice.style = normalBorderStyle;
   }
 };
 formPrice.addEventListener('invalid', getFormPriceValidation);
+
+var getSyncTime = function (element) {
+  form.timein.value = element.target.value;
+  form.timeout.value = element.target.value;
+};
+form.onchange = getSyncTime;
 
 var formSubmitButton = form.querySelector('.form__submit');
 
@@ -422,8 +421,8 @@ formSubmitButton.addEventListener('click', getValidationBySubmit);
 var formResetButton = form.querySelector('.form__reset');
 
 var getResetPage = function () {
-  formTitle.style = normalBorderStyle;
-  formPrice.style = normalBorderStyle;
+  // formTitle.style = normalBorderStyle;
+  // formPrice.style = normalBorderStyle;
   getUnactiveFieldsets();
   closeArticle();
   closePins();
