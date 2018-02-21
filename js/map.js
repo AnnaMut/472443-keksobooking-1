@@ -405,7 +405,7 @@ var getFormPriceValidation = function () {
     formPrice.style = invalidBorderStyle;
   } else {
     formPrice.setCustomValidity('');
-    formTitle.style = normalBorderStyle;
+    formPrice.style = normalBorderStyle;
   }
 };
 formPrice.addEventListener('invalid', getFormPriceValidation);
@@ -422,7 +422,8 @@ formSubmitButton.addEventListener('click', getValidationBySubmit);
 var formResetButton = form.querySelector('.form__reset');
 
 var getResetPage = function () {
-  form.reset();
+  formTitle.style = normalBorderStyle;
+  formPrice.style = normalBorderStyle;
   getUnactiveFieldsets();
   closeArticle();
   closePins();
