@@ -309,11 +309,10 @@ var openPins = function () {
 closePins();
 
 var formTitle = form.querySelector('#title');
-//var simbolMin = 30;
-//var simbolMax = 100;
+
 var minMaxSimbols = {
- 'minimum':30,
- 'maximum':100
+  'minimum': 30,
+  'maximum': 100
 };
 var invalidBorderColorClass = 'invalidcolor';
 
@@ -325,7 +324,7 @@ setMinMaxLengthTitle();
 
 var formTitleValidationMessages = {
   tooShort: 'Заголовок объявления должен состоять минимум из ' + minMaxSimbols.minimum + ' символов',
-  tooLong: 'Заголовок объявления не должен превышать '+ minMaxSimbols.maximum + ' символов',
+  tooLong: 'Заголовок объявления не должен превышать ' + minMaxSimbols.maximum + ' символов',
   valueMissing: 'Пожалуйста, введите заголовок Вашего объявления'
 };
 
@@ -346,11 +345,11 @@ var getFormTitleValidation = function () {
     formTitle.classList.add(invalidBorderColorClass);
     return;
   }
-    if  (validity.valueMissing) {
+  if (validity.valueMissing) {
     formTitle.setCustomValidity(formTitleValidationMessages.valueMissing);
     formTitle.classList.add(invalidBorderColorClass);
     return;
-    }
+  }
 };
 formTitle.addEventListener('invalid', getFormTitleValidation);
 
@@ -365,25 +364,30 @@ var pricesLimits = {
 };
 var MAX_PRICE = 1000000;
 
-var setMinPrices = function () {
-  for (var key in pricesLimits) {
-    if (formType.value === key) {
-      var minimumPrice = pricesLimits[key];
-      for (var i = 0; i < formType.options.length; i++) {
-      formPrice.min = minimumPrice;
+var getPriceLimits = function () {
+  var homePrice = document.querySelector('#price');
+  switch (formType.value) {
+    case 'flat':
+      homePrice.min = pricesLimits.flat;
+      break;
+    case 'bungalo':
+      homePrice.min = pricesLimits.bungalo;
+      break;
+    case 'house':
+      homePrice.min = pricesLimits.house;
+      break;
+    case 'palace':
+      homePrice.min = pricesLimits.palace;
+      break;
   }
-}
-}
 };
-formPrice.onchange = setMinPrices;
+formType.addEventListener('change', getPriceLimits);
 
-  var setMaxPrices = function () {
- // var formTipeValue = formType.value;
- // formPrice.min = pricesLimits[formTipeValue];
+var setMaxPrice = function () {
   formPrice.max = MAX_PRICE;
   formPrice.placeholder = pricesLimits.house;
 };
-setMaxPrices();
+setMaxPrice();
 
 var formPriceValidationMesssages = {
   rangeUnderflow: 'Цена для данного типа жилья слишком мала',
@@ -408,11 +412,11 @@ var getFormPriceValidation = function () {
     formPrice.classList.add(invalidBorderColorClass);
     return;
   }
-    if  (validity.valueMissing) {
+  if (validity.valueMissing) {
     formPrice.setCustomValidity(formPriceValidationMesssages.valueMissing);
     formPrice.classList.add(invalidBorderColorClass);
     return;
-    }
+  }
 };
 formPrice.addEventListener('invalid', getFormPriceValidation);
 
@@ -472,6 +476,7 @@ var formResetButton = form.querySelector('.form__reset');
 var getResetPage = function () {
   formTitle.classList.remove(invalidBorderColorClass);
   formPrice.classList.remove(invalidBorderColorClass);
+  form.reset();
   getUnactiveFieldsets();
   closeArticle();
   closePins();
