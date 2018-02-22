@@ -309,39 +309,113 @@ var openPins = function () {
 closePins();
 
 var formTitle = form.querySelector('#title');
+//var simbolMin = 30;
+//var simbolMax = 100;
+var minMaxSimbols = {
+ 'minimum':30,
+ 'maximum':100
+};
+var invalidBorderColorClass = 'invalidcolor';
+
+var setMinMaxLengthTitle = function () {
+  formTitle.minLength = minMaxSimbols.minimum;
+  formTitle.maxLength = minMaxSimbols.maximum;
+};
+setMinMaxLengthTitle();
+
 var formTitleValidationMessages = {
-  tooShort: 'Заголовок объявления должен состоять минимум из 30 символов',
-  tooLong: 'Заголовок объявления не должен превышать 100 символов',
+  tooShort: 'Заголовок объявления должен состоять минимум из ' + minMaxSimbols.minimum + ' символов',
+  tooLong: 'Заголовок объявления не должен превышать '+ minMaxSimbols.maximum + ' символов',
   valueMissing: 'Пожалуйста, введите заголовок Вашего объявления'
 };
 
-
 var getFormTitleValidation = function () {
-  if (formTitle.validity.tooShort) {
-    formTitle.setCustomValidity(formTitleValidationMessages.tooShort);
-    formTitle.classList.add('invalidcolor');
-  } else if (formTitle.validity.tooLong) {
-    formTitle.setCustomValidity(formTitleValidationMessages.tooLong);
-    formTitle.classList.add('invalidcolor');
-  } else if (formTitle.validity.valueMissing) {
-    formTitle.setCustomValidity(formTitleValidationMessages.valueMissing);
-    formTitle.classList.add('invalidcolor');
-  } else {
+  var validity = formTitle.validity;
+  if (validity.valid) {
     formTitle.setCustomValidity('');
+    formTitle.classList.remove(invalidBorderColorClass);
+    return;
   }
+  if (validity.tooShort) {
+    formTitle.setCustomValidity(formTitleValidationMessages.tooShort);
+    formTitle.classList.add(invalidBorderColorClass);
+    return;
+  }
+  if (validity.tooLong) {
+    formTitle.setCustomValidity(formTitleValidationMessages.tooLong);
+    formTitle.classList.add(invalidBorderColorClass);
+    return;
+  }
+    if  (validity.valueMissing) {
+    formTitle.setCustomValidity(formTitleValidationMessages.valueMissing);
+    formTitle.classList.add(invalidBorderColorClass);
+    return;
+    }
 };
 formTitle.addEventListener('invalid', getFormTitleValidation);
 
 var formType = form.querySelector('#type');
 var formPrice = form.querySelector('#price');
-var pricelimits = [1000, 0, 5000, 10000];
 
-var getSyncPrice = function () {
-  var Index = formType.selectedIndex;
-  formPrice.setAttribute('min', pricelimits[Index]);
-  formPrice.setAttribute('placeholder', pricelimits[Index]);
+var pricesLimits = {
+  'bungalo': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000
 };
-formType.onchange = getSyncPrice;
+var MAX_PRICE = 1000000;
+
+var setMinPrices = function () {
+  for (var key in pricesLimits) {
+    if (formType.value === key) {
+      var minimumPrice = pricesLimits[key];
+      for (var i = 0; i < formType.options.length; i++) {
+      formPrice.min = minimumPrice;
+  }
+}
+}
+};
+formPrice.onchange = setMinPrices;
+
+  var setMaxPrices = function () {
+ // var formTipeValue = formType.value;
+ // formPrice.min = pricesLimits[formTipeValue];
+  formPrice.max = MAX_PRICE;
+  formPrice.placeholder = pricesLimits.house;
+};
+setMaxPrices();
+
+var formPriceValidationMesssages = {
+  rangeUnderflow: 'Цена для данного типа жилья слишком мала',
+  rangeOverflow: 'Цена не должна превышать ' + MAX_PRICE,
+  valueMissing: 'Пожалуйста, введите цену'
+};
+
+var getFormPriceValidation = function () {
+  var validity = formPrice.validity;
+  if (validity.valid) {
+    formPrice.setCustomValidity('');
+    formPrice.classList.remove(invalidBorderColorClass);
+    return;
+  }
+  if (validity.rangeUnderflow) {
+    formPrice.setCustomValidity(formPriceValidationMesssages.rangeUnderflow);
+    formPrice.classList.add(invalidBorderColorClass);
+    return;
+  }
+  if (validity.rangeOverflow) {
+    formPrice.setCustomValidity(formPriceValidationMesssages.rangeOverflow);
+    formPrice.classList.add(invalidBorderColorClass);
+    return;
+  }
+    if  (validity.valueMissing) {
+    formPrice.setCustomValidity(formPriceValidationMesssages.valueMissing);
+    formPrice.classList.add(invalidBorderColorClass);
+    return;
+    }
+};
+formPrice.addEventListener('invalid', getFormPriceValidation);
+
 
 var guests = {
   '1': ['1'],
@@ -377,27 +451,6 @@ var getSyncRoomsCapacity = function () {
 formRoomNumber.onchange = getCapacity;
 formRoomCapacity.onchange = getSyncRoomsCapacity;
 
-var formPriceValidationMesssages = {
-  rangeUnderflow: 'Цена слишком мала',
-  rangeOverflow: 'Цена для данного типа не должна превышать 1000000',
-  valueMissing: 'Пожалуйста, введите цену'
-};
-
-var getFormPriceValidation = function () {
-  if (formPrice.validity.rangeUnderflow) {
-    formPrice.setCustomValidity(formPriceValidationMesssages.rangeUnderflow);
-    formPrice.classList.add('invalidcolor');
-  } else if (formPrice.validity.rangeOverflow) {
-    formPrice.setCustomValidity(formPriceValidationMesssages.rangeOverflow);
-    formPrice.classList.add('invalidcolor');
-  } else if (formPrice.validity.valueMissing) {
-    formPrice.setCustomValidity(formPriceValidationMesssages.valueMissing);
-    formPrice.classList.add('invalidcolor');
-  } else {
-    formPrice.setCustomValidity('');
-  }
-};
-formPrice.addEventListener('invalid', getFormPriceValidation);
 
 var getSyncTime = function (element) {
   form.timein.value = element.target.value;
@@ -417,8 +470,8 @@ formSubmitButton.addEventListener('click', getValidationBySubmit);
 var formResetButton = form.querySelector('.form__reset');
 
 var getResetPage = function () {
-  formTitle.classList.remove('invalidcolor');
-  formPrice.classList.remove('invalidcolor');
+  formTitle.classList.remove(invalidBorderColorClass);
+  formPrice.classList.remove(invalidBorderColorClass);
   getUnactiveFieldsets();
   closeArticle();
   closePins();
