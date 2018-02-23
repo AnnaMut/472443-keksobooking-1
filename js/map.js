@@ -310,21 +310,21 @@ closePins();
 
 var formTitle = form.querySelector('#title');
 
-var minMaxSimbols = {
+var labelLimits = {
   'minimum': 30,
   'maximum': 100
 };
 var invalidBorderColorClass = 'invalidcolor';
 
 var setMinMaxLengthTitle = function () {
-  formTitle.minLength = minMaxSimbols.minimum;
-  formTitle.maxLength = minMaxSimbols.maximum;
+  formTitle.minLength = labelLimits.minimum;
+  formTitle.maxLength = labelLimits.maximum;
 };
 setMinMaxLengthTitle();
 
 var formTitleValidationMessages = {
-  tooShort: 'Заголовок объявления должен состоять минимум из ' + minMaxSimbols.minimum + ' символов',
-  tooLong: 'Заголовок объявления не должен превышать ' + minMaxSimbols.maximum + ' символов',
+  tooShort: 'Заголовок объявления должен состоять минимум из ' + labelLimits.minimum + ' символов',
+  tooLong: 'Заголовок объявления не должен превышать ' + labelLimits.maximum + ' символов',
   valueMissing: 'Пожалуйста, введите заголовок Вашего объявления'
 };
 
@@ -365,22 +365,9 @@ var pricesLimits = {
 var MAX_PRICE = 1000000;
 
 var getPriceLimits = function () {
-  var homePrice = document.querySelector('#price');
-  switch (formType.value) {
-    case 'flat':
-      homePrice.min = pricesLimits.flat;
-      break;
-    case 'bungalo':
-      homePrice.min = pricesLimits.bungalo;
-      break;
-    case 'house':
-      homePrice.min = pricesLimits.house;
-      break;
-    case 'palace':
-      homePrice.min = pricesLimits.palace;
-      break;
-  }
+  formPrice.min = pricesLimits[formType.value];
 };
+
 formType.addEventListener('change', getPriceLimits);
 
 var setMaxPrice = function () {
@@ -473,7 +460,7 @@ formSubmitButton.addEventListener('click', getValidationBySubmit);
 
 var formResetButton = form.querySelector('.form__reset');
 
-var getResetPage = function () {
+var resetForm = function () {
   formTitle.classList.remove(invalidBorderColorClass);
   formPrice.classList.remove(invalidBorderColorClass);
   form.reset();
@@ -484,5 +471,5 @@ var getResetPage = function () {
   form.classList.add('notice__form--disabled');
 };
 
-formResetButton.addEventListener('click', getResetPage);
+formResetButton.addEventListener('click', resetForm);
 
