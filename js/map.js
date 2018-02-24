@@ -36,6 +36,12 @@ var offerTypes = [
   'bungalo'
 ];
 
+var typesDictionary = {
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalo: 'Бунгало'
+};
+
 var offerCheckInTimes = [
   '12:00',
   '13:00',
@@ -69,6 +75,8 @@ var KeyCodes = {
 var pinPrefix = 'pin-';
 
 var mainPinClass = 'map__pin--main';
+
+var pinsClass = '.map__pin';
 
 var randomSort = function () {
   return Math.random() - 0.5;
@@ -151,7 +159,7 @@ getOffers(OFFER_COUNT);
 
 var getPins = function () {
   var PinsBox = document.querySelector('.map__pins');
-  var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+  var pinTemplate = document.querySelector('template').content.querySelector(pinsClass);
   var pinFragment = document.createDocumentFragment();
   for (var i = 0; i < OFFER_COUNT; i++) {
     var template = pinTemplate.cloneNode(true);
@@ -174,7 +182,7 @@ var getArticle = function (i) {
   newArticle.querySelector('h3').textContent = offers[i].offer.title;
   newArticle.querySelector('small').textContent = offers[i].offer.address;
   newArticle.querySelector('.popup__price').textContent = offers[i].offer.price + ' ₽/ночь';
-  newArticle.querySelector('h4').textContent = offers[i].offer.type;
+  newArticle.querySelector('h4').textContent = typesDictionary[offers[i].offer.type];
   newArticle.querySelector('h4 + p').textContent = offers[i].offer.rooms + ' комнаты для ' + offers[i].offer.guests + ' гостей';
   newArticle.querySelector('h4 + p + p').textContent = 'Заезд после ' + offers[i].offer.checkin + ', выезд до ' + offers[i].offer.checkout;
   newArticle.querySelector('.popup__features').textContent = '';
@@ -187,6 +195,7 @@ var getArticle = function (i) {
 
 var mainPin = document.querySelector('.map__pin--main');
 var mapSection = document.querySelector('.map');
+var form = document.querySelector('.notice__form');
 
 var closePageOverlay = function () {
   mapSection.classList.remove('map--faded');
@@ -217,7 +226,6 @@ var getUnactiveFieldsets = function () {
 };
 
 var getActiveFieldsets = function () {
-  var form = document.querySelector('.notice__form');
   var formFieldsets = form.querySelectorAll('.notice__form fieldset');
   form.classList.remove('notice__form--disabled');
   for (var i = 0; i < formFieldsets.length; i++) {
@@ -281,7 +289,7 @@ mapSection.addEventListener('click', closeArticleByClick);
 mapSection.addEventListener('keydown', closeArticleByEsc);
 
 var closePins = function () {
-  var mapPins = document.querySelectorAll('.map__pin');
+  var mapPins = document.querySelectorAll(pinsClass);
   for (var i = 0; i < mapPins.length; i++) {
     if (!mapPins[i].classList.contains(mainPinClass)) {
       mapPins[i].classList.add('hidden');
@@ -290,7 +298,7 @@ var closePins = function () {
 };
 
 var openPins = function () {
-  var mapPins = document.querySelectorAll('.map__pin');
+  var mapPins = document.querySelectorAll(pinsClass);
   for (var i = 0; i < mapPins.length; i++) {
     if (!mapPins[i].classList.contains(mainPinClass)) {
       mapPins[i].classList.remove('hidden');
@@ -299,3 +307,169 @@ var openPins = function () {
 };
 
 closePins();
+
+var formTitle = form.querySelector('#title');
+
+var labelLimits = {
+  'minimum': 30,
+  'maximum': 100
+};
+var invalidBorderColorClass = 'invalidcolor';
+
+var setMinMaxLengthTitle = function () {
+  formTitle.minLength = labelLimits.minimum;
+  formTitle.maxLength = labelLimits.maximum;
+};
+setMinMaxLengthTitle();
+
+var formTitleValidationMessages = {
+  tooShort: 'Заголовок объявления должен состоять минимум из ' + labelLimits.minimum + ' символов',
+  tooLong: 'Заголовок объявления не должен превышать ' + labelLimits.maximum + ' символов',
+  valueMissing: 'Пожалуйста, введите заголовок Вашего объявления'
+};
+
+var getFormTitleValidation = function () {
+  var validity = formTitle.validity;
+  if (validity.valid) {
+    formTitle.setCustomValidity('');
+    formTitle.classList.remove(invalidBorderColorClass);
+    return;
+  }
+  if (validity.tooShort) {
+    formTitle.setCustomValidity(formTitleValidationMessages.tooShort);
+    formTitle.classList.add(invalidBorderColorClass);
+    return;
+  }
+  if (validity.tooLong) {
+    formTitle.setCustomValidity(formTitleValidationMessages.tooLong);
+    formTitle.classList.add(invalidBorderColorClass);
+    return;
+  }
+  if (validity.valueMissing) {
+    formTitle.setCustomValidity(formTitleValidationMessages.valueMissing);
+    formTitle.classList.add(invalidBorderColorClass);
+    return;
+  }
+};
+formTitle.addEventListener('invalid', getFormTitleValidation);
+
+var formType = form.querySelector('#type');
+var formPrice = form.querySelector('#price');
+
+var pricesLimits = {
+  'bungalo': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000
+};
+var MAX_PRICE = 1000000;
+
+var getPriceLimits = function () {
+  formPrice.min = pricesLimits[formType.value];
+};
+
+formType.addEventListener('change', getPriceLimits);
+
+var setMaxPrice = function () {
+  formPrice.max = MAX_PRICE;
+  formPrice.placeholder = pricesLimits.house;
+};
+setMaxPrice();
+
+var formPriceValidationMesssages = {
+  rangeUnderflow: 'Цена для данного типа жилья слишком мала',
+  rangeOverflow: 'Цена не должна превышать ' + MAX_PRICE,
+  valueMissing: 'Пожалуйста, введите цену'
+};
+
+var getFormPriceValidation = function () {
+  var validity = formPrice.validity;
+  if (validity.valid) {
+    formPrice.setCustomValidity('');
+    formPrice.classList.remove(invalidBorderColorClass);
+    return;
+  }
+  if (validity.rangeUnderflow) {
+    formPrice.setCustomValidity(formPriceValidationMesssages.rangeUnderflow);
+    formPrice.classList.add(invalidBorderColorClass);
+    return;
+  }
+  if (validity.rangeOverflow) {
+    formPrice.setCustomValidity(formPriceValidationMesssages.rangeOverflow);
+    formPrice.classList.add(invalidBorderColorClass);
+    return;
+  }
+  if (validity.valueMissing) {
+    formPrice.setCustomValidity(formPriceValidationMesssages.valueMissing);
+    formPrice.classList.add(invalidBorderColorClass);
+    return;
+  }
+};
+formPrice.addEventListener('invalid', getFormPriceValidation);
+
+
+var guests = {
+  '1': ['1'],
+  '2': ['1', '2'],
+  '3': ['1', '2', '3'],
+  '100': ['0']
+};
+
+var formRoomNumber = form.querySelector('#room_number');
+var formRoomCapacity = form.querySelector('#capacity');
+
+var getCapacity = function () {
+  for (var key in guests) {
+    if (formRoomNumber.value === key) {
+      formRoomCapacity.value = guests[key][0];
+      for (var i = 0; i < formRoomCapacity.options.length; i++) {
+        formRoomCapacity.options[i].removeAttribute('disabled');
+        if (guests[key].indexOf(formRoomCapacity.options[i].value) === -1) {
+          formRoomCapacity.options[i].setAttribute('disabled', '');
+        }
+      }
+    }
+  }
+};
+
+var getSyncRoomsCapacity = function () {
+  for (var key in guests) {
+    if (guests[key].indexOf(formRoomCapacity.value) > -1) {
+      formRoomNumber.value = key;
+    }
+  }
+};
+formRoomNumber.onchange = getCapacity;
+formRoomCapacity.onchange = getSyncRoomsCapacity;
+
+
+var getSyncTime = function (element) {
+  form.timein.value = element.target.value;
+  form.timeout.value = element.target.value;
+};
+form.onchange = getSyncTime;
+
+var formSubmitButton = form.querySelector('.form__submit');
+
+var getValidationBySubmit = function () {
+  formTitle.addEventListener('invalid', getFormTitleValidation);
+  formPrice.addEventListener('invalid', getFormPriceValidation);
+};
+
+formSubmitButton.addEventListener('click', getValidationBySubmit);
+
+var formResetButton = form.querySelector('.form__reset');
+
+var resetForm = function () {
+  formTitle.classList.remove(invalidBorderColorClass);
+  formPrice.classList.remove(invalidBorderColorClass);
+  form.reset();
+  getUnactiveFieldsets();
+  closeArticle();
+  closePins();
+  mapSection.classList.add('map--faded');
+  form.classList.add('notice__form--disabled');
+};
+
+formResetButton.addEventListener('click', resetForm);
+
