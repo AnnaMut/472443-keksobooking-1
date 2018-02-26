@@ -113,9 +113,6 @@
 
   var getCapacity = function () {
     var key = formRoomNumber.value;
-    if (key === 'undefined') {
-      return;
-    }
     formRoomCapacity.value = guests[key][0];
     for (var i = 0; i < formRoomCapacity.options.length; i++) {
       if (guests[key].indexOf(formRoomCapacity.options[i].value) === -1) {
