@@ -103,9 +103,8 @@
   };
 
   var getSortArray = function (arr) {
-    return arr.sort(randomSort);
+    return arr.slice(0).sort(randomSort);
   };
-
 
   window.offers = [];
 
