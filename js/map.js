@@ -9,10 +9,9 @@
     ENTER: 13
   };
 
-
   var mainPin = document.querySelector('.map__pin--main');
-  //  window.utils.mapSection = document.querySelector('.map');
   var form = document.querySelector('.notice__form');
+  var pinsOnMap = document.querySelector('.map__pins');
 
   var closePageOverlay = function () {
     window.utils.mapSection.classList.remove('map--faded');
@@ -35,7 +34,7 @@
   mainPin.addEventListener('mouseup', activatePage);
   mainPin.addEventListener('keydown', activatePageByEnter);
 
-  window.getUnactiveFieldsets = function () {
+  var getUnactiveFieldsets = function () {
     var formFieldsets = document.querySelectorAll('.notice__form fieldset');
     for (var i = 0; i < formFieldsets.length; i++) {
       formFieldsets[i].setAttribute('disabled', true);
@@ -49,52 +48,46 @@
       formFieldsets[i].removeAttribute('disabled');
     }
   };
-
-  window.getUnactiveFieldsets();
-
-
-  var pinsOnMap = document.querySelector('.map__pins');
+  getUnactiveFieldsets();
 
   var getPinByAttribute = function (evt) {
-    window.closeArticle();
+    closeArticle();
     var indexPin = evt.target.closest('.map__pin:not(.map__pin--main)');
     if (indexPin && indexPin.tagName === 'BUTTON') {
       for (var i = 0; i < window.utils.OFFER_COUNT; i++) {
         var id = evt.target.closest('.map__pin:not(.map__pin--main)').id;
         var index = parseInt(id.substr(window.utils.pinPrefix.length), 10);
-        window.getArticle(index);
-        window.putCardOnMap(index);
+        window.card.getcard(index); // почему не идет
+        window.pin.putсard(index); // почему не идет
         window.utils.mapSection.querySelector('.popup__close').addEventListener('click', closeArticleByClick);
       }
     }
   };
-
   pinsOnMap.addEventListener('click', getPinByAttribute);
 
-  window.closeArticle = function () {
+  var closeArticle = function () {
     var article = document.querySelector('.map__card');
     article.classList.add('hidden');
   };
-
-  window.closeArticle();
+  closeArticle();
 
   var closeArticleByClick = function (evt) {
     document.querySelector('popup__close');
     if (evt.target.classList.contains('popup__close')) {
-      window.closeArticle();
+      closeArticle();
     }
   };
 
   var closeArticleByEsc = function (evt) {
     if (evt.keyCode === KeyCodes.ESC) {
-      window.closeArticle();
+      closeArticle();
     }
   };
 
   window.utils.mapSection.addEventListener('click', closeArticleByClick);
   window.utils.mapSection.addEventListener('keydown', closeArticleByEsc);
 
-  window.closePins = function () {
+  var closePins = function () {
     var mapPins = document.querySelectorAll(window.utils.pinsClass);
     for (var i = 0; i < mapPins.length; i++) {
       if (!mapPins[i].classList.contains(window.utils.mainPinClass)) {
@@ -111,7 +104,12 @@
       }
     }
   };
+  closePins();
 
-  window.closePins();
+  window.map = {
+    enablefieldsets: getUnactiveFieldsets,
+    closepins: closePins,
+    closearticle: closeArticle
+  }; // точка входа
 
 })();

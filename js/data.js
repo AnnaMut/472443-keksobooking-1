@@ -76,7 +76,7 @@
     return Math.floor(Math.random() * (max - min) + min);
   };
 
-  window.getFeatures = function (arr) {
+  var getFeatures = function (arr) {
     var newFeature = document.createElement('li');
     newFeature.classList.add('feature');
     var featuresBox = document.createDocumentFragment();
@@ -89,7 +89,7 @@
     return featuresBox;
   };
 
-  window.getPhotos = function (arr) {
+  var getPhotos = function (arr) {
     var photoTemlate = document.createElement('img');
     var photoBox = document.createDocumentFragment();
     for (var i = 0; i < arr.length; i++) {
@@ -106,14 +106,14 @@
     return arr.slice(0).sort(randomSort);
   };
 
-  window.offers = [];
+  var offers = [];
 
   var getOffers = function () {
     for (var i = 0; i < window.utils.OFFER_COUNT; i++) {
       var CoordinateX = getRandomFromInterval(MAP.left, MAP.right);
       var CoordinateY = getRandomFromInterval(MAP.top, MAP.bottom);
 
-      window.offers.push({
+      offers.push({
         'author': {
           'avatar': 'img/avatars/user0' + (i + 1) + '.png',
         },
@@ -141,6 +141,12 @@
   };
 
   getOffers();
+
+  window.data = {
+    getdata: getOffers,
+    getfeatures: getFeatures,
+    getphotos: getPhotos
+  }; // точка входа
 
 })();
 

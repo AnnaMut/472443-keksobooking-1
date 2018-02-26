@@ -4,6 +4,7 @@
   var PIN_WIDTH = 40;
   var PIN_HEIGHT = 44;
 
+
   var getPins = function () {
     var pinsBox = document.querySelector('.map__pins');
     var pinTemplate = document.querySelector('template').content.querySelector(window.utils.pinsClass);
@@ -19,17 +20,17 @@
     pinsBox.appendChild(pinFragment);
   };
 
-  window.putCardOnMap = function (i) {
+  var putCardOnMap = function (i) {
     var mapCard = document.querySelector('.map__card');
     if (window.utils.mapSection.contains(mapCard)) {
       mapCard.remove();
     }
     var cardFragment = document.createDocumentFragment();
-    cardFragment.appendChild(window.getArticle(i));
+    cardFragment.appendChild(window.card.getcard(i));// почему не идет
     window.utils.mapSection.insertBefore(cardFragment, document.querySelector('.map__filters-container'));
   };
 
-  window.putCardOnMap(0);
+  putCardOnMap(0);
   getPins();
+  window.pin = {putcard: putCardOnMap}; // точка входа
 })();
-
