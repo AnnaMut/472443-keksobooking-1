@@ -1,17 +1,60 @@
 'use strict';
 
 (function () {
-  var PIN_CENTER_X = 600;
-  var PIN_CENTER_Y = 300;
+  var MAIN_PIN_WIDTH = 50;
+  var MAIN_PIN_HEIGHT = 70;
 
   var KeyCodes = {
     ESC: 27,
     ENTER: 13
   };
 
+  var BorderY = {
+    MIN: 150,
+    MAX: 500
+  };
+
+  var BorderX = {
+    MIN: 30,
+    MAX: 1100
+  };
+
   var mainPin = document.querySelector('.map__pin--main');
   var form = document.querySelector('.notice__form');
   var pinsOnMap = document.querySelector('.map__pins');
+
+  var getDragAndDrop = function (evt) {
+    evt.preventDefault();
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+      if (mainPin.offsetLeft - shift.x < BorderX.MIN || mainPin.offsetLeft - shift.x > BorderY.MAX) {
+        mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+      }
+      if ((mainPin.offsetTop - shift.y) >= (BorderY.MIN - (MAIN_PIN_HEIGHT / 2 + MAIN_PIN_HEIGHT / 3)) && (mainPin.offsetTop - shift.y) <= (BorderY.MAX - (MAIN_PIN_HEIGHT / 2 + MAIN_PIN_HEIGHT / 3))) {
+        mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+      }
+    };
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  };
+  mainPin.addEventListener('mousedown', getDragAndDrop);
 
   var closePageOverlay = function () {
     window.utils.mapSection.classList.remove('map--faded');
@@ -21,7 +64,7 @@
     var addressPart = document.querySelector('#address');
     closePageOverlay();
     getActiveFieldsets();
-    addressPart.value = PIN_CENTER_X + ', ' + PIN_CENTER_Y;
+    addressPart.value = mainPin.offsetLeft + MAIN_PIN_WIDTH / 2 + ', ' + mainPin.offsetTop + MAIN_PIN_HEIGHT;
     openPins();
   };
 
