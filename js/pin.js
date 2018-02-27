@@ -11,9 +11,9 @@
     var pinFragment = document.createDocumentFragment();
     for (var i = 0; i < window.utils.OFFER_COUNT; i++) {
       var template = pinTemplate.cloneNode(true);
-      template.style.left = window.offers[i].location.x - PIN_WIDTH + 'px';
-      template.style.top = window.offers[i].location.y - PIN_HEIGHT + 'px';
-      template.querySelector('img').src = window.offers[i].author.avatar;
+      template.style.left = window.data.offers[i].location.x - PIN_WIDTH + 'px';
+      template.style.top = window.data.offers[i].location.y - PIN_HEIGHT + 'px';
+      template.querySelector('img').src = window.data.offers[i].author.avatar;
       template.id = window.utils.pinPrefix + i;
       pinFragment.appendChild(template);
     }

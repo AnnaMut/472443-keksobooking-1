@@ -106,21 +106,20 @@
     return arr.slice(0).sort(randomSort);
   };
 
-  var offers = [];
 
   var getOffers = function () {
     for (var i = 0; i < window.utils.OFFER_COUNT; i++) {
-      var CoordinateX = getRandomFromInterval(MAP.left, MAP.right);
-      var CoordinateY = getRandomFromInterval(MAP.top, MAP.bottom);
-
-      offers.push({
+      var сoordinateX = getRandomFromInterval(MAP.left, MAP.right);
+      var сoordinateY = getRandomFromInterval(MAP.top, MAP.bottom);
+      var noffers = [];
+      noffers.push({
         'author': {
           'avatar': 'img/avatars/user0' + (i + 1) + '.png',
         },
 
         'offer': {
           'title': offerTitles.sort(randomSort)[i],
-          'address': CoordinateX + ',' + CoordinateY,
+          'address': сoordinateX + ',' + сoordinateY,
           'price': getRandomFromInterval(PRICE_MIN, PRICE_MAX),
           'type': getRandomElement(offerTypes),
           'rooms': getRandomFromInterval(ROOM_MIN, ROOM_MAX),
@@ -133,17 +132,17 @@
         },
 
         'location': {
-          'x': CoordinateX,
-          'y': CoordinateY,
+          'x': сoordinateX,
+          'y': сoordinateY,
         },
       });
+      return noffers;
     }
   };
 
-  getOffers();
 
   window.data = {
-    getdata: getOffers,
+    offers: getOffers(),
     getfeatures: getFeatures,
     getphotos: getPhotos
   }; // точка входа
