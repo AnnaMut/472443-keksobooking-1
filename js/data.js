@@ -76,43 +76,17 @@
     return Math.floor(Math.random() * (max - min) + min);
   };
 
-  var getFeatures = function (arr) {
-    var newFeature = document.createElement('li');
-    newFeature.classList.add('feature');
-    var featuresBox = document.createDocumentFragment();
-
-    for (var i = 0; i < arr.length; i++) {
-      var featurePoint = newFeature.cloneNode();
-      featurePoint.classList.add('feature--' + arr[i]);
-      featuresBox.appendChild(featurePoint);
-    }
-    return featuresBox;
-  };
-
-  var getPhotos = function (arr) {
-    var photoTemlate = document.createElement('img');
-    var photoBox = document.createDocumentFragment();
-    for (var i = 0; i < arr.length; i++) {
-      var photoItemli = photoTemlate.cloneNode(true);
-      photoItemli.src = arr[i];
-      photoItemli.style = 'width:' + '50px';
-      photoItemli.style = 'height:' + '50px';
-      photoBox.appendChild(photoItemli);
-    }
-    return photoBox;
-  };
-
   var getSortArray = function (arr) {
     return arr.slice(0).sort(randomSort);
   };
 
-
   var getOffers = function () {
+    var offers = [];
     for (var i = 0; i < window.utils.OFFER_COUNT; i++) {
       var сoordinateX = getRandomFromInterval(MAP.left, MAP.right);
       var сoordinateY = getRandomFromInterval(MAP.top, MAP.bottom);
-      var noffers = [];
-      noffers.push({
+
+      offers.push({
         'author': {
           'avatar': 'img/avatars/user0' + (i + 1) + '.png',
         },
@@ -134,18 +108,16 @@
         'location': {
           'x': сoordinateX,
           'y': сoordinateY,
-        },
+        }
       });
-      return noffers;
     }
+    return offers;
   };
 
 
   window.data = {
     offers: getOffers(),
-    getfeatures: getFeatures,
-    getphotos: getPhotos
-  }; // точка входа
+  };
 
 })();
 

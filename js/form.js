@@ -140,9 +140,9 @@
     formTitle.classList.remove(invalidBorderColorClass);
     formPrice.classList.remove(invalidBorderColorClass);
     form.reset();
-    window.map.enablefieldsets(); // почему не идет
-    window.map.closearticle(); // почему не идет
-    window.map.closepins(); // почему не идет
+    window.map.enablefieldsets();
+    window.map.closearticle();
+    window.map.closepins();
     window.utils.mapSection.classList.add('map--faded');
     form.classList.add('notice__form--disabled');
   };

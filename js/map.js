@@ -57,8 +57,7 @@
       for (var i = 0; i < window.utils.OFFER_COUNT; i++) {
         var id = evt.target.closest('.map__pin:not(.map__pin--main)').id;
         var index = parseInt(id.substr(window.utils.pinPrefix.length), 10);
-        window.card.getcard(index); // почему не идет
-        window.pin.putсard(index); // почему не идет
+        window.card.getcard(index);
         window.utils.mapSection.querySelector('.popup__close').addEventListener('click', closeArticleByClick);
       }
     }
@@ -110,6 +109,6 @@
     enablefieldsets: getUnactiveFieldsets,
     closepins: closePins,
     closearticle: closeArticle
-  }; // точка входа
+  };
 
 })();

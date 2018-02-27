@@ -20,17 +20,17 @@
     pinsBox.appendChild(pinFragment);
   };
 
-  var putCardOnMap = function (i) {
-    var mapCard = document.querySelector('.map__card');
-    if (window.utils.mapSection.contains(mapCard)) {
+  var putCardOnMap = function (i) { // вообще не пойму зачем у меня это тут, нигде не используется,
+    var mapCard = document.querySelector('.map__card'); // но если я это убираю и убираю внизу
+    if (window.utils.mapSection.contains(mapCard)) { // вызов этих функций то ничего не работает
       mapCard.remove();
     }
     var cardFragment = document.createDocumentFragment();
-    cardFragment.appendChild(window.card.getcard(i));// почему не идет
+    cardFragment.appendChild(window.card.getcard(i));
     window.utils.mapSection.insertBefore(cardFragment, document.querySelector('.map__filters-container'));
   };
 
   putCardOnMap(0);
   getPins();
-  window.pin = {putcard: putCardOnMap}; // точка входа
+
 })();
