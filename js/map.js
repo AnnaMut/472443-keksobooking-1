@@ -10,8 +10,8 @@
   };
 
   var BorderY = {
-    MIN: 150,
-    MAX: 500
+    MIN: 110,
+    MAX: 650
   };
 
   var BorderX = {
@@ -36,9 +36,10 @@
         y: startCoords.y - moveEvt.clientY
       };
       startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
+        x: Math.min(Math.max(moveEvt.clientX, BorderX.MIN), BorderX.MAX),
+        y: Math.min(Math.max(moveEvt.clientY, BorderY.MIN), BorderY.MAX)
       };
+
       if (mainPin.offsetLeft - shift.x > BorderX.MIN && mainPin.offsetLeft - shift.x < BorderX.MAX) {
         mainPin.style.left = mainPin.offsetLeft - shift.x + 'px';
       }
@@ -48,10 +49,10 @@
     };
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      document.removeEventListener('mousemove', onMouseMove);
+      window.utils.mapSection.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
-    document.addEventListener('mousemove', onMouseMove);
+    window.utils.mapSection.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   };
   mainPin.addEventListener('mousedown', getDragAndDrop);
@@ -74,7 +75,8 @@
     }
   };
 
-  mainPin.addEventListener('mouseup', activatePage);
+  // mainPin.addEventListener('mouseup', activatePage);
+  mainPin.addEventListener('mousedown', activatePage);
   mainPin.addEventListener('keydown', activatePageByEnter);
 
   var getUnactiveFieldsets = function () {
