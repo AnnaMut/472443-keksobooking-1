@@ -39,11 +39,11 @@
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
-      if (mainPin.offsetLeft - shift.x < BorderX.MIN || mainPin.offsetLeft - shift.x > BorderY.MAX) {
-        mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+      if (mainPin.offsetLeft - shift.x > BorderX.MIN && mainPin.offsetLeft - shift.x < BorderX.MAX) {
+        mainPin.style.left = mainPin.offsetLeft - shift.x + 'px';
       }
-      if ((mainPin.offsetTop - shift.y) >= (BorderY.MIN - (MAIN_PIN_HEIGHT / 2 + MAIN_PIN_HEIGHT / 3)) && (mainPin.offsetTop - shift.y) <= (BorderY.MAX - (MAIN_PIN_HEIGHT / 2 + MAIN_PIN_HEIGHT / 3))) {
-        mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+      if (mainPin.offsetTop - shift.y < BorderY.MAX && mainPin.offsetTop - shift.y > BorderY.MIN) {
+        mainPin.style.top = mainPin.offsetTop - shift.y + 'px';
       }
     };
     var onMouseUp = function (upEvt) {
