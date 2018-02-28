@@ -49,10 +49,10 @@
     };
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      window.utils.mapSection.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
-    window.utils.mapSection.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   };
   mainPin.addEventListener('mousedown', getDragAndDrop);
