@@ -148,4 +148,15 @@
   };
   formResetButton.addEventListener('click', resetForm);
 
+  var submitForm = function () {
+    form.reset();
+  };
+
+  var sendSuccess = function (evt) {
+    window.backend.senddata(new FormData(form), submitForm, window.backend.showerror);
+    evt.preventDefault();
+  };
+
+  form.addEventListener('submit', sendSuccess);
+
 })();
