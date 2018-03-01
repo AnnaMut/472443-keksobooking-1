@@ -19,7 +19,7 @@
     pinsBox.appendChild(pinFragment);
   };
 
-  var putCardOnMap = function (i) {
+  var putCardOnMap = function (i) { //??
     var mapCard = document.querySelector('.map__card');
     if (window.utils.mapSection.contains(mapCard)) {
       mapCard.remove();
@@ -28,7 +28,7 @@
     cardFragment.appendChild(window.card.getcard(i));
     window.utils.mapSection.insertBefore(cardFragment, document.querySelector('.map__filters-container'));
   };
-  putCardOnMap();// иначе ругается тревис
+
   window.pin = {
     getpins: getPins
   };
