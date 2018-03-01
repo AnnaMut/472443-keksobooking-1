@@ -19,13 +19,13 @@
     pinsBox.appendChild(pinFragment);
   };
 
-  var putCardOnMap = function (i) { //??
+  var putCardOnMap = function () { // ??
     var mapCard = document.querySelector('.map__card');
     if (window.utils.mapSection.contains(mapCard)) {
       mapCard.remove();
     }
     var cardFragment = document.createDocumentFragment();
-    cardFragment.appendChild(window.card.getcard(i));
+    cardFragment.appendChild(window.card.getcard());
     window.utils.mapSection.insertBefore(cardFragment, document.querySelector('.map__filters-container'));
   };
 

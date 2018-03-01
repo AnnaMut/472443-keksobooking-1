@@ -66,7 +66,7 @@
     var addressPart = document.querySelector('#address');
     closePageOverlay();
     getActiveFieldsets();
-    window.backend.loaddata(createSuccessActions, window.backend.showerror);
+    window.backend.loaddata(createSuccessActions, onError);
     addressPart.value = mainPin.offsetLeft + MAIN_PIN_WIDTH / 2 + ', ' + mainPin.offsetTop + MAIN_PIN_HEIGHT;
     openPins();
   };
@@ -77,10 +77,14 @@
     }
   };
 
-
   var createSuccessActions = function (offers) {
     window.utils.offers = offers;
     window.pin.getpins();
+  };
+
+  var onError = function () {
+    var node = window.backend.showerror;
+    return node;
   };
 
   mainPin.addEventListener('mousedown', activatePage);

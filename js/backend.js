@@ -10,7 +10,7 @@
     errorconnection: 'Произошла ошибка соединения',
     errortime: 'Запрос не успел выполниться за '
   };
-  var node = document.createElement('div');
+
 
   var getRequest = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
@@ -46,7 +46,8 @@
     xhr.send(data);
   };
 
-  var createErrorNode = function () { // не показывает ноду эррора
+  var createErrorNode = function () {
+    var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: #C71585;';
     node.style.position = 'absolute';
     node.style.left = 0;
@@ -54,18 +55,24 @@
     node.style.fontSize = '30px';
     document.body.insertAdjacentElement('afterbegin', node);
     node.classList.add('hidden');
+    node.addEventListener('click', removeErrorMessage);
+    return node;
   };
-  createErrorNode(); // иначе ругается тревис
+  createErrorNode();
+
   var showErrorMessage = function () {
+    var node = createErrorNode();
     node.textContent = '';
     node.classList.remove('hidden');
+    return node;
   };
 
   var removeErrorMessage = function () {
+    var node = showErrorMessage();
     node.textContent = '';
     node.classList.add('hidden');
+    node.removeEventListener('click', removeErrorMessage);
   };
-  node.addEventListener('click', removeErrorMessage);
 
 
   window.backend = {
