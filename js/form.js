@@ -153,7 +153,7 @@
   };
 
   var onError = function () {
-    var node = window.backend.showerror;
+    var node = window.backend.showerror();
     return node;
   };
 
