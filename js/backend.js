@@ -66,7 +66,7 @@
     if (message === undefined) {
       node.textContent = '';
     } else {
-      node.textContent = 'message';
+      node.textContent = message;
     }
     return node;
   };
