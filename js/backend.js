@@ -12,7 +12,7 @@
   };
 
 
-  var getRequest = function (onSuccess, onError) {
+  var getRequest = function (onSuccess, showErrorMessage) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -20,14 +20,14 @@
       if (xhr.status === SUCSESS_STATUS) {
         onSuccess(xhr.response);
       } else {
-        onError(messages.responsemessage + xhr.status + ' ' + xhr.statusText);
+        showErrorMessage(messages.responsemessage + xhr.status + ' ' + xhr.statusText);
       }
     });
     xhr.addEventListener('error', function () {
-      onError(messages.errorconnection);
+      showErrorMessage(messages.errorconnection);
     });
     xhr.addEventListener('timeout', function () {
-      onError(messages.errortime + xhr.timeout + 'мс');
+      showErrorMessage(messages.errortime + xhr.timeout + 'мс');
     });
 
     xhr.timeout = TIME_OUT_DATE;
@@ -52,13 +52,15 @@
     node.style.position = 'absolute';
     node.style.left = 0;
     node.style.right = 0;
+    node.style.top = '200px';
+    node.style.height = '200px';
     node.style.fontSize = '30px';
     document.body.insertAdjacentElement('afterbegin', node);
     node.classList.add('hidden');
     node.addEventListener('click', removeErrorMessage);
     return node;
   };
-  createErrorNode();
+  // createErrorNode();
 
   var showErrorMessage = function () {
     var node = createErrorNode();
