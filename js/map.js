@@ -23,6 +23,7 @@
   var form = document.querySelector('.notice__form');
   var pinsOnMap = document.querySelector('.map__pins');
 
+
   var getDragAndDrop = function (evt) {
     evt.preventDefault();
     var startCoords = {
@@ -65,6 +66,7 @@
     var addressPart = document.querySelector('#address');
     closePageOverlay();
     getActiveFieldsets();
+    window.backend.loaddata(createSuccessActions, window.backend.showerror);
     addressPart.value = mainPin.offsetLeft + MAIN_PIN_WIDTH / 2 + ', ' + mainPin.offsetTop + MAIN_PIN_HEIGHT;
     openPins();
   };
@@ -75,7 +77,11 @@
     }
   };
 
-  // mainPin.addEventListener('mouseup', activatePage);
+  var createSuccessActions = function (offers) {
+    window.utils.offers = offers;
+    window.pin.getpins();
+  };
+
   mainPin.addEventListener('mousedown', activatePage);
   mainPin.addEventListener('keydown', activatePageByEnter);
 
@@ -96,35 +102,44 @@
   getUnactiveFieldsets();
 
   var getPinByAttribute = function (evt) {
-    closeArticle();
     var indexPin = evt.target.closest('.map__pin:not(.map__pin--main)');
     if (indexPin && indexPin.tagName === 'BUTTON') {
-      for (var i = 0; i < window.utils.OFFER_COUNT; i++) {
-        var id = evt.target.closest('.map__pin:not(.map__pin--main)').id;
-        var index = parseInt(id.substr(window.utils.pinPrefix.length), 10);
-        window.card.getcard(index);
-        window.utils.mapSection.querySelector('.popup__close').addEventListener('click', closeArticleByClick);
-      }
+      var id = evt.target.closest('.map__pin:not(.map__pin--main)').id;
+      var index = parseInt(id.substr(window.utils.pinPrefix.length), 10);
+      window.card.getcard(index);
+      window.utils.mapSection.querySelector('.popup__close').addEventListener('click', closeArticleByClick);
     }
   };
   pinsOnMap.addEventListener('click', getPinByAttribute);
 
+  var deletActiveClass = function () {
+    var mapPins = document.querySelectorAll(window.utils.pinsClass);
+    for (var i = 0; i < mapPins.length; i++) {
+      if (mapPins[i].classList.contains('active')) {
+        mapPins[i].classList.remove('active');
+      }
+    }
+  };
+
   var closeArticle = function () {
     var article = document.querySelector('.map__card');
-    article.classList.add('hidden');
+    if (window.utils.mapSection.contains(article)) {
+      article.remove();
+    }
   };
-  closeArticle();
 
   var closeArticleByClick = function (evt) {
     document.querySelector('popup__close');
     if (evt.target.classList.contains('popup__close')) {
       closeArticle();
+      deletActiveClass();
     }
   };
 
   var closeArticleByEsc = function (evt) {
     if (evt.keyCode === KeyCodes.ESC) {
       closeArticle();
+      deletActiveClass();
     }
   };
 
@@ -148,7 +163,6 @@
       }
     }
   };
-  closePins();
 
   window.map = {
     enablefieldsets: getUnactiveFieldsets,

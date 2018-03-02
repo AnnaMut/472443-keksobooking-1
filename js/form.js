@@ -74,6 +74,21 @@
   };
   formTitle.addEventListener('invalid', getFormTitleValidation);
 
+  var onTitleBlur = function (evt) {
+    evt.target.checkValidity();
+  };
+
+  var onTitleFocus = function (evt) {
+    formTitle.classList.remove(invalidBorderColorClass)(evt.target);
+  };
+
+  var onTitleChange = function () {
+    formTitle.setCustomValidity('');
+    formTitle.classList.remove(invalidBorderColorClass);
+  };
+  formTitle.addEventListener('blur', onTitleBlur);
+  formTitle.addEventListener('focus', onTitleFocus);
+  formTitle.addEventListener('change', onTitleChange);
 
   var getPriceLimits = function () {
     formPrice.min = pricesLimits[formType.value];
@@ -111,6 +126,12 @@
   };
   formPrice.addEventListener('invalid', getFormPriceValidation);
 
+  var onPriceChange = function () {
+    formPrice.setCustomValidity('');
+    formPrice.classList.remove(invalidBorderColorClass);
+  };
+  formPrice.addEventListener('change', onPriceChange);
+
   var getCapacity = function () {
     var key = formRoomNumber.value;
     formRoomCapacity.value = guests[key][0];
@@ -147,5 +168,16 @@
     form.classList.add('notice__form--disabled');
   };
   formResetButton.addEventListener('click', resetForm);
+
+  var submitForm = function () {
+    form.reset();
+  };
+
+  var sendSuccess = function (evt) {
+    window.backend.senddata(new FormData(form), submitForm, window.backend.showerror);
+    evt.preventDefault();
+  };
+
+  form.addEventListener('submit', sendSuccess);
 
 })();
