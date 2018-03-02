@@ -104,12 +104,10 @@
   var getPinByAttribute = function (evt) {
     var indexPin = evt.target.closest('.map__pin:not(.map__pin--main)');
     if (indexPin && indexPin.tagName === 'BUTTON') {
-      for (var i = 0; i < window.utils.OFFER_COUNT; i++) {
-        var id = evt.target.closest('.map__pin:not(.map__pin--main)').id;
-        var index = parseInt(id.substr(window.utils.pinPrefix.length), 10);
-        window.card.getcard(index);
-        window.utils.mapSection.querySelector('.popup__close').addEventListener('click', closeArticleByClick);
-      }
+      var id = evt.target.closest('.map__pin:not(.map__pin--main)').id;
+      var index = parseInt(id.substr(window.utils.pinPrefix.length), 10);
+      window.card.getcard(index);
+      window.utils.mapSection.querySelector('.popup__close').addEventListener('click', closeArticleByClick);
     }
   };
   pinsOnMap.addEventListener('click', getPinByAttribute);
@@ -126,7 +124,7 @@
   var closeArticle = function () {
     var article = document.querySelector('.map__card');
     if (window.utils.mapSection.contains(article)) {
-      article.classList.add('hidden');
+      article.remove();
     }
   };
 

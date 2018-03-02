@@ -45,36 +45,24 @@
     xhr.send(data);
   };
 
-  var createErrorNode = function () {
+  var createErrorNode = function (text) {
     var node = document.createElement('div');
     node.classList.add('error-node');
     document.body.insertAdjacentElement('afterbegin', node);
-    node.classList.add('hidden');
+    node.textContent = text;
     node.addEventListener('click', removeErrorMessage);
     return node;
   };
 
-  var showErrorMessage = function (message) {
-    var node = createErrorNode();
-    node.classList.remove('hidden');
-    if (message) {
-      node.textContent = '';
-    } else {
-      node.textContent = message;
-    }
-    return node;
-  };
-
   var removeErrorMessage = function (evt) {
-    var node = showErrorMessage();
-    node.classList.add('hidden');
+    document.body.removeChild(evt.target);
     evt.target.removeEventListener('click', removeErrorMessage);
   };
 
   window.backend = {
     loaddata: loadData,
     senddata: sendData,
-    showerror: showErrorMessage
+    showerror: createErrorNode
   };
 
 })();

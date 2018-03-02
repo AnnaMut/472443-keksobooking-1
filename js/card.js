@@ -7,9 +7,12 @@
     house: 'Дом',
     bungalo: 'Бунгало'
   };
-  // дебагер ругается на функцию, ошибку консоль не выдает, но pinArticle undefined  выходит. Само объявление показывает.
+
   var getArticle = function (i) {
     var pinArticle = document.querySelector('template').content.querySelector('article.map__card');
+    if (window.utils.mapSection.contains(pinArticle)) {
+      pinArticle.remove();
+    }
     var newArticle = pinArticle.cloneNode(true);
     newArticle.querySelector('.popup__avatar').src = window.utils.offers[i].author.avatar;
     newArticle.querySelector('h3').textContent = window.utils.offers[i].offer.title;
