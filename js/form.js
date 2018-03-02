@@ -152,13 +152,8 @@
     form.reset();
   };
 
-  var onError = function () {
-    var node = window.backend.showerror();
-    return node;
-  };
-
   var sendSuccess = function (evt) {
-    window.backend.senddata(new FormData(form), submitForm, onError);
+    window.backend.senddata(new FormData(form), submitForm, window.backend.showErrorMessage());
     evt.preventDefault();
   };
 

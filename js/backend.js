@@ -60,20 +60,22 @@
     return node;
   };
 
-  var showErrorMessage = function () {
+  var showErrorMessage = function (message) {
     var node = createErrorNode();
-    node.textContent = '';
     node.classList.remove('hidden');
+    if (message === undefined) {
+      node.textContent = '';
+    } else {
+      node.textContent = 'message';
+    }
     return node;
   };
 
   var removeErrorMessage = function () {
     var node = showErrorMessage();
-    node.textContent = '';
     node.classList.add('hidden');
     node.removeEventListener('click', removeErrorMessage);
   };
-
 
   window.backend = {
     loaddata: loadData,
