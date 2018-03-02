@@ -3,12 +3,12 @@
 (function () {
   var URL = 'https://js.dump.academy/keksobooking';
   var DATA_URL = 'https://js.dump.academy/keksobooking/data';
-  var SUCSESS_STATUS = 200;
-  var TIME_OUT_DATE = 10000;
-  var messages = {
-    responsemessage: 'Статус ответа: ',
-    errorconnection: 'Произошла ошибка соединения',
-    errortime: 'Запрос не успел выполниться за '
+  var SUCСESS_STATUS = 200;
+  var TIME_OUT = 10000;
+  var Messages = {
+    responseMessage: 'Статус ответа: ',
+    connectionError: 'Произошла ошибка соединения',
+    timeError: 'Запрос не успел выполниться за '
   };
 
   var getRequest = function (onSuccess, onError) {
@@ -16,20 +16,20 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === SUCSESS_STATUS) {
+      if (xhr.status === SUCСESS_STATUS) {
         onSuccess(xhr.response);
       } else {
-        onError(messages.responsemessage + xhr.status + ' ' + xhr.statusText);
+        onError(Messages.responseMessage + xhr.status + ' ' + xhr.statusText);
       }
     });
     xhr.addEventListener('error', function () {
-      onError(messages.errorconnection);
+      onError(Messages.connectionError);
     });
     xhr.addEventListener('timeout', function () {
-      onError(messages.errortime + xhr.timeout + 'мс');
+      onError(Messages.timeError + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = TIME_OUT_DATE;
+    xhr.timeout = TIME_OUT;
     return xhr;
   };
 
