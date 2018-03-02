@@ -11,8 +11,7 @@
     errortime: 'Запрос не успел выполниться за '
   };
 
-
-  var getRequest = function (onSuccess, showErrorMessage) {
+  var getRequest = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -20,28 +19,28 @@
       if (xhr.status === SUCSESS_STATUS) {
         onSuccess(xhr.response);
       } else {
-        showErrorMessage(messages.responsemessage + xhr.status + ' ' + xhr.statusText);
+        onError(messages.responsemessage + xhr.status + ' ' + xhr.statusText);
       }
     });
     xhr.addEventListener('error', function () {
-      showErrorMessage(messages.errorconnection);
+      onError(messages.errorconnection);
     });
     xhr.addEventListener('timeout', function () {
-      showErrorMessage(messages.errortime + xhr.timeout + 'мс');
+      onError(messages.errortime + xhr.timeout + 'мс');
     });
 
     xhr.timeout = TIME_OUT_DATE;
     return xhr;
   };
 
-  var loadData = function (onSuccess, showErrorMessage) {
-    var xhr = getRequest(onSuccess, showErrorMessage);
+  var loadData = function (onSuccess, onError) {
+    var xhr = getRequest(onSuccess, onError);
     xhr.open('GET', DATA_URL);
     xhr.send();
   };
 
-  var sendData = function (data, onSuccess, showErrorMessage) {
-    var xhr = getRequest(onSuccess, showErrorMessage);
+  var sendData = function (data, onSuccess, onError) {
+    var xhr = getRequest(onSuccess, onError);
     xhr.open('POST', URL);
     xhr.send(data);
   };
@@ -60,7 +59,6 @@
     node.addEventListener('click', removeErrorMessage);
     return node;
   };
-  // createErrorNode();
 
   var showErrorMessage = function () {
     var node = createErrorNode();
