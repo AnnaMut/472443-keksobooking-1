@@ -47,13 +47,7 @@
 
   var createErrorNode = function () {
     var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: #C71585;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.top = '200px';
-    node.style.height = '200px';
-    node.style.fontSize = '30px';
+    node.classList.add('error-node');
     document.body.insertAdjacentElement('afterbegin', node);
     node.classList.add('hidden');
     node.addEventListener('click', removeErrorMessage);
@@ -71,10 +65,10 @@
     return node;
   };
 
-  var removeErrorMessage = function () {
+  var removeErrorMessage = function (evt) {
     var node = showErrorMessage();
     node.classList.add('hidden');
-    node.removeEventListener('click', removeErrorMessage);
+    evt.target.removeEventListener('click', removeErrorMessage);
   };
 
   window.backend = {
