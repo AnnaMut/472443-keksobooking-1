@@ -63,7 +63,7 @@
   var showErrorMessage = function (message) {
     var node = createErrorNode();
     node.classList.remove('hidden');
-    if (message === undefined) {
+    if (message) {
       node.textContent = '';
     } else {
       node.textContent = message;
