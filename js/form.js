@@ -153,7 +153,7 @@
   };
 
   var sendSuccess = function (evt) {
-    window.backend.senddata(new FormData(form), submitForm, window.backend.showErrorMessage());
+    window.backend.senddata(new FormData(form), submitForm, window.backend.showerror());
     evt.preventDefault();
   };
 

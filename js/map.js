@@ -66,7 +66,7 @@
     var addressPart = document.querySelector('#address');
     closePageOverlay();
     getActiveFieldsets();
-    window.backend.loaddata(createSuccessActions, window.backend.showErrorMessage());
+    window.backend.loaddata(createSuccessActions, window.backend.showerror());
     addressPart.value = mainPin.offsetLeft + MAIN_PIN_WIDTH / 2 + ', ' + mainPin.offsetTop + MAIN_PIN_HEIGHT;
     openPins();
   };
