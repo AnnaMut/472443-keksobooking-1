@@ -22,7 +22,7 @@
   var mainPin = document.querySelector('.map__pin--main');
   var form = document.querySelector('.notice__form');
   var pinsOnMap = document.querySelector('.map__pins');
-
+  var newOffers = [];
 
   var getDragAndDrop = function (evt) {
     evt.preventDefault();
@@ -78,9 +78,14 @@
   };
 
   var createSuccessActions = function (offers) {
-    window.utils.offers = offers;
-    window.pin.getpins();
+    newOffers = offers.slice(0);
+    window.pin.getpins(window.filters.setfilter(newOffers));
   };
+
+  window.filters.callback(function () {
+    closePins();
+    window.pin.getpins(window.filters.setfilter(newOffers));
+  });
 
   mainPin.addEventListener('mousedown', activatePage);
   mainPin.addEventListener('keydown', activatePageByEnter);
