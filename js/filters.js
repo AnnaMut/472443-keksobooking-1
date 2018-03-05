@@ -2,10 +2,28 @@
 
 (function () {
   var filterForm = document.querySelector('.map__filters');
-  var filterType = 'any';
-  var filterPrice = 'any';
-  var filterRooms = 'any';
-  var filterGuests = 'any';
+
+
+  var filterType = filterForm.querySelector('#housing-type');
+  var filterPrice = filterForm.querySelector('#housing-price');
+  var filterRooms = filterForm.querySelector('#housing-rooms');
+  var filterGuests = filterForm.querySelector('#housing-guests');
+  var filterFeatures = filterForm.querySelector('#housing-features');
+  var wifiFeature = filterFeatures.querySelector('#filter-wifi');
+  var dishwasherFeature = filterFeatures.querySelector('#filter-dishwasher');
+  var parkingFeature = filterFeatures.querySelector('#filter-parking');
+  var washerFeatures = filterFeatures.querySelector('#filter-washer');
+  var elevatorFeature = filterFeatures.querySelector('#filter-elevator');
+  var conditionerFeature = filterFeatures.querySelector('#filter-conditioner');
+
+
+
+
+
+  filterType = 'any';
+  filterPrice = 'any';
+  filterRooms = 'any';
+  filterGuests = 'any';
 
   var PriceRangs = {
     middle: 'middle',
@@ -18,7 +36,7 @@
     max: 50000
   };
 
-  var changeFlag = null;
+  //var changeFlag = null;
 
   var IdFilters = {
     type: 'housing-type',
@@ -33,16 +51,25 @@
     conditioner: 'filter-conditioner'
   };
 
-  var filterWifi = false;
-  var filterDishwasher = false;
-  var filterParking = false;
-  var filterWasher = false;
-  var filterElevator = false;
-  var filterConditioner = false;
+  wifiFeature = false;
+  dishwasherFeature = false;
+  parkingFeature = false;
+  washerFeatures = false;
+  elevatorFeature = false;
+  conditionerFeature = false;
 
-  var putCallback = function (callback) {
-    changeFlag = callback;
-  };
+
+function doHomework(subject, callback) {
+  alert(`Starting my ${subject} homework.`);
+  callback();
+}
+  doHomework('math', function() {
+  alert('Finished my homework');
+});
+
+  //var putCallback = function (callback) {
+   // changeFlag = callback;
+  //};
 
   var setFilter = function (offers) {
     return offers.filter(function (offer) {
@@ -64,12 +91,12 @@
       }
       var setRooms = filterRooms === 'any' || offer.offer.rooms.toString() === filterRooms;
       var setGuests = filterGuests === 'any' || offer.offer.guests.toString() === filterGuests;
-      var IsWiFi = filterWifi === false || offer.offer.features.indexOf('wifi') !== -1;
-      var IsDishwasher = filterDishwasher === false || offer.offer.features.indexOf('dishwasher') !== -1;
-      var IsParking = filterParking === false || offer.offer.features.indexOf('parking') !== -1;
-      var IsWasher = filterWasher === false || offer.offer.features.indexOf('washer') !== -1;
-      var IsElevator = filterElevator === false || offer.offer.features.indexOf('elevator') !== -1;
-      var IsConditioner = filterConditioner === false || offer.offer.features.indexOf('conditioner') !== -1;
+      var IsWiFi = wifiFeature === false || offer.offer.features.indexOf('wifi') !== -1;
+      var IsDishwasher = dishwasherFeature === false || offer.offer.features.indexOf('dishwasher') !== -1;
+      var IsParking = parkingFeature === false || offer.offer.features.indexOf('parking') !== -1;
+      var IsWasher = washerFeatures === false || offer.offer.features.indexOf('washer') !== -1;
+      var IsElevator = elevatorFeature === false || offer.offer.features.indexOf('elevator') !== -1;
+      var IsConditioner = conditionerFeature === false || offer.offer.features.indexOf('conditioner') !== -1;
       return setType && setPrice && setRooms && setGuests && IsWiFi && IsDishwasher && IsParking && IsWasher && IsElevator && IsConditioner;
     });
   };
@@ -90,32 +117,158 @@
         filterGuests = currentTarget.value;
         break;
       case IdFilters.wifi:
-        filterWifi = currentTarget.checked;
+        wifiFeature = currentTarget.checked;
         break;
       case IdFilters.dishwasher:
-        filterDishwasher = currentTarget.checked;
+        dishwasherFeature = currentTarget.checked;
         break;
       case IdFilters.parking:
-        filterParking = currentTarget.checked;
+        parkingFeature = currentTarget.checked;
         break;
       case IdFilters.washer:
-        filterWasher = currentTarget.checked;
+        washerFeatures = currentTarget.checked;
         break;
       case IdFilters.elevator:
-        filterElevator = currentTarget.checked;
+        elevatorFeature = currentTarget.checked;
         break;
       case IdFilters.conditioner:
-        filterConditioner = currentTarget.checked;
+        conditionerFeature = currentTarget.checked;
         break;
-    }
-    if (typeof changeFlag === 'function') {
-      changeFlag();
-    }
+      }
   });
 
   window.filters = {
     setfilter: setFilter,
-    callback: putCallback
+    //callback: putCallback
   };
 
 })();
+
+
+
+'use strict';
+(function () {
+  // ==========================================================================
+  // Константы и переменные
+  // =========================================================================
+  var SHOW_PIN = 5;
+  // Рабочая копия массива полученных с сервера данных
+  var dataCopy = [];
+  // объект c текущими значениями фильтров
+  var filterValue = {
+    type: 'any',
+    price: 'any',
+    rooms: 'any',
+    guests: 'any'
+  };
+  // Отмеченные пользователем удобства
+  var checkedFeatures = [];
+  // Фильтры
+  var filterForm = document.querySelector('.map__filters');
+  var filterType = filterForm.querySelector('#housing-type');
+  var filterPrice = filterForm.querySelector('#housing-price');
+  var filterRooms = filterForm.querySelector('#housing-rooms');
+  var filterGuests = filterForm.querySelector('#housing-guests');
+  var filterFeatures = filterForm.querySelector('#housing-features');
+  // =========================================================================
+  // Массив с функциями фильтров
+  // =========================================================================
+
+    // Фильтр по типу жилья
+
+var setFilter = function (offers) {
+    return offers.filter(function (offer) {
+      if (filterValue.type !== 'any') {
+        offers = offers.filter(function (offer) {
+          return offer.offer.type === filterValue.type;
+        });
+var setRooms = filterRooms === 'any' || offer.offer.rooms.toString() === filterRooms;
+
+
+
+      switch (filterValue.price) {
+        case 'any':
+          break;
+        case 'low':
+          arr = arr.filter(function (element) {
+            return element.offer.price <= 10000;
+          });
+          break;
+        case 'high':
+          arr = arr.filter(function (element) {
+            return element.offer.price >= 50000;
+          });
+          break;
+        case 'middle':
+          arr = arr.filter(function (element) {
+            return (element.offer.price > 10000) && (element.offer.price < 50000);
+          });
+      if (filterValue.rooms !== 'any') {
+        arr = arr.filter(function (element) {
+          return element.offer.rooms === parseInt(filterValue.rooms, 10);
+        });
+      if (filterValue.guests !== 'any') {
+        arr = arr.filter(function (element) {
+          return element.offer.guests === parseInt(filterValue.guests, 10);
+        });
+      return arr.filter(function (element) {
+        return checkedFeatures.every(function (currentFeature) {
+          return element.offer.features.includes(currentFeature);
+        });
+
+
+
+  // ==========================================================================
+  // Функция фильтрации
+  // =========================================================================
+  var onFiltersChange = function (evt) {
+    // Выставляем значение сработавшего фильтра в объекте текущих значений фильтров
+    var filterName = evt.target.name.substring(8);
+    filterValue[filterName] = evt.target.value;
+    // Копируем исходные данные для фильтрования
+    window.mapFilters.filteredData = dataCopy.slice();
+    // Получаем список отмеченных чекбоксов
+    var checkedElements = filterFeatures.querySelectorAll('input[type="checkbox"]:checked');
+    // Преобразуем список в массив строк
+    checkedFeatures = [].map.call(checkedElements, function (element) {
+      return element.value;
+    });
+    // Получаем массив данных после обработки системой фильтров
+    filterFunctions.forEach(function (getFiltered) {
+      window.mapFilters.filteredData = getFiltered(window.mapFilters.filteredData);
+    });
+    // Обрезаем полученный массив до необходимой длинны
+    if (window.mapFilters.filteredData.length > SHOW_PIN) {
+      window.mapFilters.filteredData = window.mapFilters.filteredData.slice(0, SHOW_PIN);
+    }
+    // Добавляем пины на страницу через установленный тайм-аут
+    window.debounce(window.map.appendPins);
+  };
+  // ==========================================================================
+  // Обработчики событий изменения фильтров
+  // ==========================================================================
+  filterType.addEventListener('change', onFiltersChange);
+  filterPrice.addEventListener('change', onFiltersChange);
+  filterRooms.addEventListener('change', onFiltersChange);
+  filterGuests.addEventListener('change', onFiltersChange);
+  filterFeatures.addEventListener('change', onFiltersChange);
+  // ==========================================================================
+  // Экспортируем функцию, принимающую массив данных с сервера,
+  // и отфильтрованный массив данных
+  // ==========================================================================
+  window.mapFilters = {
+    filteredData: [],
+    transferData: function (data) {
+      dataCopy = data.slice();
+      this.filteredData = data.slice(0, SHOW_PIN);
+    },
+  };
+})();
+
+
+ //}
+   // if (typeof changeFlag === 'function') {
+   //   window.debounce.setdebounce(changeFlag);
+    //}
+ // });
+

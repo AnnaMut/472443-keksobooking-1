@@ -22,7 +22,6 @@
   var mainPin = document.querySelector('.map__pin--main');
   var form = document.querySelector('.notice__form');
   var pinsOnMap = document.querySelector('.map__pins');
-  var newOffers = [];
 
   var getDragAndDrop = function (evt) {
     evt.preventDefault();
@@ -68,7 +67,6 @@
     getActiveFieldsets();
     window.backend.loaddata(createSuccessActions, window.backend.showerror);
     addressPart.value = mainPin.offsetLeft + MAIN_PIN_WIDTH / 2 + ', ' + mainPin.offsetTop + MAIN_PIN_HEIGHT;
-    openPins();
   };
 
   var activatePageByEnter = function (evt) {
@@ -78,14 +76,26 @@
   };
 
   var createSuccessActions = function (offers) {
-    newOffers = offers.slice(0);
-    window.pin.getpins(window.filters.setfilter(newOffers));
+    window.offers = offers;
+   // window.pin.getpins(window.filters.setfilter(offers.slice(0)));
+   window.pin.getpins(offers.slice(0));
   };
 
-  window.filters.callback(function () {
-    closePins();
-    window.pin.getpins(window.filters.setfilter(newOffers));
-  });
+
+ // window.filters.callback(function () {
+ //   closePins();
+ //   closePins();
+ //   window.offers = (window.filters.setfilter(window.offers));
+ //   window.pin.getpins(window.offers);
+ // });
+
+ var getFilters= function () {
+  closePins();
+   closePins();
+    window.offers = (window.filters.setfilter(window.offers));
+    window.pin.getpins(window.offers);
+  };
+
 
   mainPin.addEventListener('mousedown', activatePage);
   mainPin.addEventListener('keydown', activatePageByEnter);
@@ -128,8 +138,9 @@
 
   var closeArticle = function () {
     var article = document.querySelector('.map__card');
-    if (window.utils.mapSection.contains(article)) {
-      article.remove();
+    if (article) {
+      article.parentNode.removeChild(article);
+      window.utils.mapSection.removeEventListener('keydown', closeArticleByEsc);
     }
   };
 
@@ -153,21 +164,12 @@
 
   var closePins = function () {
     var mapPins = document.querySelectorAll(window.utils.pinsClass);
-    for (var i = 0; i < mapPins.length; i++) {
-      if (!mapPins[i].classList.contains(window.utils.mainPinClass)) {
-        mapPins[i].classList.add('hidden');
-      }
-    }
+    mapPins.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+    window.utils.mapSection.removeEventListener('keydown', closeArticleByEsc);
   };
 
-  var openPins = function () {
-    var mapPins = document.querySelectorAll(window.utils.pinsClass);
-    for (var i = 0; i < mapPins.length; i++) {
-      if (!mapPins[i].classList.contains(window.utils.mainPinClass)) {
-        mapPins[i].classList.remove('hidden');
-      }
-    }
-  };
 
   window.map = {
     enablefieldsets: getUnactiveFieldsets,

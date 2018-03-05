@@ -6,7 +6,6 @@
     pinPrefix: 'pin-',
     mapSection: document.querySelector('.map'),
     mainPinClass: 'map__pin--main',
-    pinsClass: '.map__pin',
-    offers: []
+    pinsClass: '.map__pin'
   };
 })();
