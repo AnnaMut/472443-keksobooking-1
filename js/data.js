@@ -86,7 +86,7 @@
       var сoordinateX = getRandomFromInterval(MAP.left, MAP.right);
       var сoordinateY = getRandomFromInterval(MAP.top, MAP.bottom);
 
-      offers.push({
+      offers[i] = {
         'author': {
           'avatar': 'img/avatars/user0' + (i + 1) + '.png',
         },
@@ -109,15 +109,16 @@
           'x': сoordinateX,
           'y': сoordinateY,
         }
-      });
+      };
     }
     return offers;
   };
 
-
+getOffers
   window.data = {
     offers: getOffers(),
   };
+
 
 })();
 
