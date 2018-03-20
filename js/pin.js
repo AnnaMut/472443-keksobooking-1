@@ -3,7 +3,7 @@
 (function () {
   var PIN_WIDTH = 40;
   var PIN_HEIGHT = 44;
-  window.offers= [];
+  window.offers = [];
 
   var getPins = function () {
     var pinsBox = document.querySelector('.map__pins');

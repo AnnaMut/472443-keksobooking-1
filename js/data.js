@@ -114,7 +114,7 @@
     return offers;
   };
 
-getOffers
+  getOffers();
   window.data = {
     offers: getOffers(),
   };

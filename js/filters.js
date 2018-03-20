@@ -8,7 +8,6 @@
     max: 50000
   };
 
-  
   var applyFilters = function () {
     window.map.closepins();
 
