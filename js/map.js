@@ -77,21 +77,9 @@
 
   var createSuccessActions = function (offers) {
     window.offers = offers;
-    // window.pin.getpins(window.filters.setfilter(offers.slice(0)));
-    // var filters = window.utils.mapSection.querySelector('.map__filters');
-    // filters.addEventListener('change', function () {
-    //  window.pin.getpins(window.filtrate.offers);
     closeArticle();
-    // });
     window.pin.getpins(offers.slice(0));
   };
-
-  // window.filters.callback(function () {
-  //   closePins();
-  //   closePins();
-  //   window.offers = (window.filters.setfilter(window.offers));
-  //   window.pin.getpins(window.offers);
-  // });
 
   mainPin.addEventListener('mousedown', activatePage);
   mainPin.addEventListener('keydown', activatePageByEnter);
@@ -166,37 +154,10 @@
     window.utils.mapSection.removeEventListener('keydown', closeArticleByEsc);
   };
 
-  // var removePins = function () {
-  //  var childs = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-  //  for (var i = 0; i < childs.length; i++) {
-  //    mapPins.removeChild(childs[i]);
-  //  }
-  // };
-
-  var getFilters = function (offers) {
-    closePins();
-    window.offers = offers;
-
-    // var filters = window.utils.mapSection.querySelector('.map__filters');
-    // filters.addEventListener('change', function () {
-    // window.pin.getpins(window.filter.offers);
-    window.filters.filter(offers);
-    closeArticle();
-    // });
-  };
-
-  getFilters();
-  // window.offers = (window.filters.filteroffers(window.offers));
-  // var newoOffers = (window.filters.filteroffers(window.offers));
-  //  window.pin.getpins();
-  // };
-
-
   window.map = {
     enablefieldsets: getUnactiveFieldsets,
     closepins: closePins,
     closearticle: closeArticle
-  //  getfilters: getFilters
   };
 
 })();
